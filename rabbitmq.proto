@@ -1,0 +1,46 @@
+syntax="proto3";
+
+package amqp;
+
+option go_package = ".;amqp";
+
+message RabbitMQMessage
+{
+    enum Type
+    {
+        NEWS_RSS     = 0;
+        NEWS_TWITTER = 1;
+    }
+
+    Type               type               = 1;
+    Language           language           = 2;
+    
+    NewsTwitterMessage newsTwitterMessage = 10;
+    NewsRSSMessage     newsRSSMessage     = 11;
+
+    enum Language 
+    {
+        FR = 0;
+        EN = 1;
+        ES = 2;
+    }
+}
+
+message NewsTwitterMessage
+{
+    string title         = 1;
+    string authorName    = 2;
+    string authorUrl     = 3;
+    string authorIconUrl = 4;
+    string url           = 5;
+    string iconUrl       = 6;
+    string content       = 7;
+}
+
+message NewsRSSMessage
+{
+	string title    = 1;
+    string url      = 2;
+    string iconUrl  = 3;
+    int64 date      = 4;
+}
