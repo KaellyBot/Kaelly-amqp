@@ -4,9 +4,9 @@ import (
 	"errors"
 	"sync"
 
-	amqp "github.com/rabbitmq/amqp091-go"
+	"github.com/rabbitmq/amqp091-go"
 	"github.com/rs/zerolog/log"
-	protobuf "google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/proto"
 )
 
 const (
@@ -15,6 +15,7 @@ const (
 	logQueue      = "amqpQueue"
 	logProto      = "amqpProto"
 	logContent    = "amqpContent"
+	logPanic      = "amqpPanic"
 )
 
 var (
@@ -22,22 +23,24 @@ var (
 	ErrMustBeConnected   = errors.New("This function requires to be connected to AMQP server")
 )
 
+type MessageConsumer func(message *RabbitMQMessage, correlationId string)
+
 type MessageBrokerInterface interface {
 	Publish(msg *RabbitMQMessage, topic, routingKey, correlationId string) error
-	Consume(queueName, routingKey string) (<-chan amqp.Delivery, error)
+	Consume(queueName, routingKey string, consumer MessageConsumer) error
 	IsConnected() bool
 	Shutdown()
 }
 
 type MessageBroker struct {
-	connection  *amqp.Connection
-	channel     *amqp.Channel
-	mutex       *sync.Mutex
-	clientId    string
-	address     string
-	topics      []string
-	bindings    []Binding
-	isConnected bool
+	connection       *amqp091.Connection
+	publisherChannel *amqp091.Channel
+	consumerChannel  *amqp091.Channel
+	mutex            *sync.Mutex
+	clientId         string
+	address          string
+	bindings         []Binding
+	isConnected      bool
 }
 
 type Binding struct {
@@ -52,11 +55,10 @@ type Binding struct {
 	- topics: topics used to publish and consume messages
 	- bindings: topic, routingKey and queue used to consume messages
 */
-func New(clientId, address string, topics []string, bindings []Binding) (*MessageBroker, error) {
+func New(clientId, address string, bindings []Binding) (*MessageBroker, error) {
 	broker := MessageBroker{
 		clientId:    clientId,
 		address:     address,
-		topics:      topics,
 		bindings:    bindings,
 		isConnected: false,
 		mutex:       &sync.Mutex{},
@@ -70,12 +72,18 @@ func (broker *MessageBroker) dial() error {
 	defer broker.mutex.Unlock()
 
 	var err error
-	if broker.connection, err = amqp.Dial(broker.address); err != nil {
+	if broker.connection, err = amqp091.Dial(broker.address); err != nil {
 		log.Error().Err(err).Msgf("Failed to connect to AMQP server")
 		return ErrCannotBeConnected
 	}
 
-	if broker.channel, err = broker.connection.Channel(); err != nil {
+	if broker.publisherChannel, err = broker.connection.Channel(); err != nil {
+		log.Error().Err(err).Msgf("Failed to retrieve channel from AMQP server connection")
+		broker.connection.Close()
+		return ErrCannotBeConnected
+	}
+
+	if broker.consumerChannel, err = broker.connection.Channel(); err != nil {
 		log.Error().Err(err).Msgf("Failed to retrieve channel from AMQP server connection")
 		broker.connection.Close()
 		return ErrCannotBeConnected
@@ -95,26 +103,9 @@ func (broker *MessageBroker) dial() error {
 
 func (broker *MessageBroker) declareBindings() error {
 
-	for _, topic := range broker.topics {
-		err := broker.channel.ExchangeDeclare(
-			topic,   // name
-			"topic", // type
-			true,    // durable
-			false,   // auto-deleted
-			false,   // internal
-			false,   // no-wait
-			nil,     // arguments
-		)
-
-		if err != nil {
-			log.Error().Err(err).Str(logTopic, topic).Msgf("Failed to declare topic exchange")
-			return ErrCannotBeConnected
-		}
-	}
-
 	for _, binding := range broker.bindings {
 		uniqueQueue := broker.getIdentifiedQueue(binding.Queue)
-		_, err := broker.channel.QueueDeclare(
+		_, err := broker.consumerChannel.QueueDeclare(
 			uniqueQueue, // name
 			true,        // durable
 			false,       // delete when unused
@@ -127,7 +118,7 @@ func (broker *MessageBroker) declareBindings() error {
 			return ErrCannotBeConnected
 		}
 
-		err = broker.channel.QueueBind(
+		err = broker.consumerChannel.QueueBind(
 			uniqueQueue,        // queue name
 			binding.RoutingKey, // routing key
 			binding.Topic,      // exchange
@@ -147,7 +138,7 @@ func (broker *MessageBroker) getIdentifiedQueue(queue string) string {
 }
 
 func (broker *MessageBroker) handleAMQPConnection() {
-	amqpClosed := broker.connection.NotifyClose(make(chan *amqp.Error))
+	amqpClosed := broker.connection.NotifyClose(make(chan *amqp091.Error))
 	for err := range amqpClosed {
 		broker.mutex.Lock()
 		defer broker.mutex.Unlock()
@@ -166,20 +157,20 @@ func (broker *MessageBroker) Publish(msg *RabbitMQMessage, topic, routingKey, co
 		return ErrMustBeConnected
 	}
 
-	data, err := protobuf.Marshal(msg)
+	data, err := proto.Marshal(msg)
 	if err != nil {
 		log.Error().Err(err).Interface(logProto, msg).Msgf("Publication ignored since marshal failed")
 		return err
 	}
 
 	log.Debug().Str(logTopic, topic).Str(logRoutingKey, routingKey).Str(logContent, string(data)).Msgf("Sending message...")
-	err = broker.channel.Publish(
+	err = broker.publisherChannel.Publish(
 		topic,
 		routingKey,
 		false,
 		false,
-		amqp.Publishing{
-			ContentType:   "application/json",
+		amqp091.Publishing{
+			ContentType:   "application/protobuf",
 			CorrelationId: correlationId,
 			Body:          data,
 		},
@@ -192,12 +183,12 @@ func (broker *MessageBroker) Publish(msg *RabbitMQMessage, topic, routingKey, co
 	return nil
 }
 
-func (broker *MessageBroker) Consume(queueName, routingKey string) (<-chan amqp.Delivery, error) {
+func (broker *MessageBroker) Consume(queueName, routingKey string, consumer MessageConsumer) error {
 	if !broker.IsConnected() {
-		return nil, ErrMustBeConnected
+		return ErrMustBeConnected
 	}
 
-	return broker.channel.Consume(
+	delivery, err := broker.consumerChannel.Consume(
 		broker.getIdentifiedQueue(queueName), // queue
 		broker.clientId,                      // consumer
 		false,                                // auto ack
@@ -206,10 +197,36 @@ func (broker *MessageBroker) Consume(queueName, routingKey string) (<-chan amqp.
 		false,                                // no wait
 		nil,                                  // args
 	)
+	if err != nil {
+		return err
+	}
+
+	go broker.dispatch(delivery, consumer)
+	return nil
+}
+
+func (broker *MessageBroker) dispatch(delivery <-chan amqp091.Delivery, consumer MessageConsumer) {
+	for data := range delivery {
+		var message *RabbitMQMessage
+		if err := proto.Unmarshal(data.Body, message); err != nil {
+			log.Error().Err(err).Msgf("Protobuf unmarshal failed, message ignored. Continuing...")
+		} else {
+			broker.callConsumer(consumer, message, data.CorrelationId)
+		}
+	}
+}
+
+func (broker *MessageBroker) callConsumer(consumer MessageConsumer, message *RabbitMQMessage, correlationId string) {
+	defer func() {
+		if err := recover(); err != nil {
+			log.Error().Interface(logPanic, err).Msgf("Message consumer panicked. Continuing...")
+		}
+	}()
+	consumer(message, correlationId)
 }
 
 func (broker *MessageBroker) IsConnected() bool {
-	return broker.connection != nil && broker.channel != nil && broker.isConnected
+	return broker.isConnected
 }
 
 func (broker *MessageBroker) Shutdown() {
@@ -217,8 +234,15 @@ func (broker *MessageBroker) Shutdown() {
 	defer broker.mutex.Unlock()
 	broker.isConnected = false
 
-	if broker.channel != nil {
-		err := broker.channel.Close()
+	if broker.publisherChannel != nil && !broker.publisherChannel.IsClosed() {
+		err := broker.publisherChannel.Close()
+		if err != nil {
+			log.Warn().Err(err).Msgf("Failed to close channel during AMQP Shutdown")
+		}
+	}
+
+	if broker.consumerChannel != nil && !broker.consumerChannel.IsClosed() {
+		err := broker.consumerChannel.Close()
 		if err != nil {
 			log.Warn().Err(err).Msgf("Failed to close channel during AMQP Shutdown")
 		}

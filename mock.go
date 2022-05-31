@@ -1,13 +1,12 @@
 package amqp
 
 import (
-	amqp "github.com/rabbitmq/amqp091-go"
 	"github.com/rs/zerolog/log"
 )
 
 type MessageBrokerMock struct {
 	PublishFunc     func(msg *RabbitMQMessage, topic, routingKey, correlationId string) error
-	ConsumeFunc     func(queueName, routingKey string) (<-chan amqp.Delivery, error)
+	ConsumeFunc     func(queueName, routingKey string, consumer MessageConsumer) error
 	IsConnectedFunc func() bool
 	ShutdownFunc    func()
 }
@@ -21,13 +20,13 @@ func (mock *MessageBrokerMock) Publish(msg *RabbitMQMessage, topic, routingKey, 
 	return nil
 }
 
-func (mock *MessageBrokerMock) Consume(queueName, routingKey string) (<-chan amqp.Delivery, error) {
+func (mock *MessageBrokerMock) Consume(queueName, routingKey string, consumer MessageConsumer) error {
 	if mock.ConsumeFunc != nil {
-		return mock.ConsumeFunc(queueName, routingKey)
+		return mock.ConsumeFunc(queueName, routingKey, consumer)
 	}
 
 	log.Warn().Msgf("No mock provided for Consume function")
-	return nil, nil
+	return nil
 }
 
 func (mock *MessageBrokerMock) IsConnected() bool {
