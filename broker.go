@@ -207,11 +207,11 @@ func (broker *MessageBroker) Consume(queueName, routingKey string, consumer Mess
 
 func (broker *MessageBroker) dispatch(delivery <-chan amqp091.Delivery, consumer MessageConsumer) {
 	for data := range delivery {
-		var message *RabbitMQMessage
-		if err := proto.Unmarshal(data.Body, message); err != nil {
+		var message RabbitMQMessage
+		if err := proto.Unmarshal(data.Body, &message); err != nil {
 			log.Error().Err(err).Msgf("Protobuf unmarshal failed, message ignored. Continuing...")
 		} else {
-			broker.callConsumer(consumer, message, data.CorrelationId)
+			broker.callConsumer(consumer, &message, data.CorrelationId)
 		}
 	}
 }
