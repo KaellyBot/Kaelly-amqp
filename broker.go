@@ -79,19 +79,19 @@ func (broker *MessageBroker) dial() error {
 
 	if broker.publisherChannel, err = broker.connection.Channel(); err != nil {
 		log.Error().Err(err).Msgf("Failed to retrieve channel from AMQP server connection")
-		broker.connection.Close()
+		broker.Shutdown()
 		return ErrCannotBeConnected
 	}
 
 	if broker.consumerChannel, err = broker.connection.Channel(); err != nil {
 		log.Error().Err(err).Msgf("Failed to retrieve channel from AMQP server connection")
-		broker.connection.Close()
+		broker.Shutdown()
 		return ErrCannotBeConnected
 	}
 
 	if err = broker.declareBindings(); err != nil {
 		log.Error().Err(err).Msgf("Failed to declare topics, queues and bindings")
-		broker.connection.Close()
+		broker.Shutdown()
 		return ErrCannotBeConnected
 	}
 
