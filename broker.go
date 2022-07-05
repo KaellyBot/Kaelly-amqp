@@ -191,7 +191,7 @@ func (broker *MessageBroker) Consume(queueName, routingKey string, consumer Mess
 	delivery, err := broker.consumerChannel.Consume(
 		broker.getIdentifiedQueue(queueName), // queue
 		broker.clientId,                      // consumer
-		false,                                // auto ack
+		true,                                 // auto ack
 		false,                                // exclusive
 		false,                                // no local
 		false,                                // no wait
