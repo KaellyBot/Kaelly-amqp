@@ -8,18 +8,23 @@ option go_package = ".;amqp";
 
 message RabbitMQMessage
 {
+    Type     type     = 1;
+    Language language = 2;
+    Status   status   = 3;
+    
+    NewsTwitterMessage    newsTwitterMessage    = 10;
+    NewsRSSMessage        newsRSSMessage        = 11;
+    PortalPositionRequest portalPositionRequest = 12;
+    PortalPositionAnswer  portalPositionAnswer  = 13;
+
     enum Type
     {
-        UNKNOWN      = 0;
-        NEWS_RSS     = 1;
-        NEWS_TWITTER = 2;
+        UNKNOWN                 = 0;
+        NEWS_RSS                = 1;
+        NEWS_TWITTER            = 2;
+        PORTAL_POSITION_REQUEST = 3;
+        PORTAL_POSITION_ANSWER  = 4;
     }
-
-    Type               type               = 1;
-    Language           language           = 2;
-    
-    NewsTwitterMessage newsTwitterMessage = 10;
-    NewsRSSMessage     newsRSSMessage     = 11;
 
     enum Language 
     {
@@ -27,6 +32,12 @@ message RabbitMQMessage
         FR  = 1;
         EN  = 2;
         ES  = 3;
+    }
+
+    enum Status 
+    {
+        SUCCESS = 0;
+        FAILED  = 1;
     }
 }
 
@@ -43,9 +54,56 @@ message NewsTwitterMessage
 
 message NewsRSSMessage
 {
-	string title                   = 1;
-    string authorName              = 2;
-    string url                     = 3;
-    string iconUrl                 = 4;
-    google.protobuf.Timestamp date = 5;
+	string                    title      = 1;
+    string                    authorName = 2;
+    string                    url        = 3;
+    string                    iconUrl    = 4;
+    google.protobuf.Timestamp date       = 5;
+}
+
+message PortalPositionRequest
+{
+    string    server    = 1;
+    Dimension dimension = 2;
+
+    enum Dimension {
+        ALL       = 0;
+        ENUTROSOR = 1;
+        SRAMBAD   = 2;
+        XELORIUM  = 3;
+        ECAFLIPUS = 4;
+    }
+}
+
+message PortalPositionAnswer
+{
+    repeated PortalPosition positions = 1;
+
+    message PortalPosition {
+        string                    server        = 1;
+        string                    dimension     = 2;
+        int32                     remainingUses = 3;
+        Position                  position      = 4;
+        string                    createdBy     = 5;
+        string                    updatedBy     = 6;
+        google.protobuf.Timestamp createdAt     = 7;
+        google.protobuf.Timestamp updatedAt     = 8;
+        string                    source        = 9;
+
+        message Position {
+            int32 x                        = 1;
+            int32 y                        = 2;
+            bool isInCanopy                = 3;
+            Transport transport            = 4;
+            Transport conditionalTransport = 5;
+
+            message Transport {
+                string area    = 1;
+                string subArea = 2;
+                string type    = 3;
+                int32 x        = 4;
+                int32 y        = 5;
+            }
+        }
+    }
 }
