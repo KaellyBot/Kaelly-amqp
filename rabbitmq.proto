@@ -63,16 +63,8 @@ message NewsRSSMessage
 
 message PortalPositionRequest
 {
-    string    server    = 1;
-    Dimension dimension = 2;
-
-    enum Dimension {
-        ALL       = 0;
-        ENUTROSOR = 1;
-        SRAMBAD   = 2;
-        XELORIUM  = 3;
-        ECAFLIPUS = 4;
-    }
+    string server    = 1;
+    string dimension = 2;
 }
 
 message PortalPositionAnswer
@@ -88,7 +80,7 @@ message PortalPositionAnswer
         string                    updatedBy     = 6;
         google.protobuf.Timestamp createdAt     = 7;
         google.protobuf.Timestamp updatedAt     = 8;
-        string                    source        = 9;
+        Source                    source        = 9;
 
         message Position {
             int32 x                        = 1;
@@ -104,6 +96,12 @@ message PortalPositionAnswer
                 int32 x        = 4;
                 int32 y        = 5;
             }
+        }
+
+        message Source {
+            string name = 1;
+            string icon = 2;
+            string url  = 3;
         }
     }
 }
