@@ -5,15 +5,15 @@ import (
 )
 
 type MessageBrokerMock struct {
-	PublishFunc     func(msg *RabbitMQMessage, topic, routingKey, correlationId string) error
+	PublishFunc     func(msg *RabbitMQMessage, exchange Exchange, routingKey, correlationId string) error
 	ConsumeFunc     func(queueName, routingKey string, consumer MessageConsumer) error
 	IsConnectedFunc func() bool
 	ShutdownFunc    func()
 }
 
-func (mock *MessageBrokerMock) Publish(msg *RabbitMQMessage, topic, routingKey, correlationId string) error {
+func (mock *MessageBrokerMock) Publish(msg *RabbitMQMessage, exchange Exchange, routingKey, correlationId string) error {
 	if mock.PublishFunc != nil {
-		return mock.PublishFunc(msg, topic, routingKey, correlationId)
+		return mock.PublishFunc(msg, exchange, routingKey, correlationId)
 	}
 
 	log.Warn().Msgf("No mock provided for Publish function")

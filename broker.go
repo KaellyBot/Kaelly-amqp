@@ -1,53 +1,13 @@
 package amqp
 
 import (
-	"errors"
+	"context"
 	"sync"
 
 	"github.com/rabbitmq/amqp091-go"
 	"github.com/rs/zerolog/log"
 	"google.golang.org/protobuf/proto"
 )
-
-const (
-	logTopic      = "amqpTopic"
-	logRoutingKey = "amqpRoutingKey"
-	logQueue      = "amqpQueue"
-	logProto      = "amqpProto"
-	logContent    = "amqpContent"
-	logPanic      = "amqpPanic"
-)
-
-var (
-	ErrCannotBeConnected = errors.New("Cannot be connected, please check AMQP server or address")
-	ErrMustBeConnected   = errors.New("This function requires to be connected to AMQP server")
-)
-
-type MessageConsumer func(message *RabbitMQMessage, correlationId string)
-
-type MessageBrokerInterface interface {
-	Publish(msg *RabbitMQMessage, topic, routingKey, correlationId string) error
-	Consume(queueName, routingKey string, consumer MessageConsumer) error
-	IsConnected() bool
-	Shutdown()
-}
-
-type MessageBroker struct {
-	connection       *amqp091.Connection
-	publisherChannel *amqp091.Channel
-	consumerChannel  *amqp091.Channel
-	mutex            *sync.Mutex
-	clientId         string
-	address          string
-	bindings         []Binding
-	isConnected      bool
-}
-
-type Binding struct {
-	RoutingKey string
-	Topic      string
-	Queue      string
-}
 
 /*
 	- clientId: ID used to be identified as a publisher/consumer
@@ -119,13 +79,13 @@ func (broker *MessageBroker) declareBindings() error {
 		}
 
 		err = broker.consumerChannel.QueueBind(
-			uniqueQueue,        // queue name
-			binding.RoutingKey, // routing key
-			binding.Topic,      // exchange
+			uniqueQueue,
+			binding.RoutingKey,
+			binding.Exchange,
 			false,
 			nil)
 		if err != nil {
-			log.Error().Err(err).Str(logTopic, binding.Topic).Str(logQueue, uniqueQueue).Str(logRoutingKey, binding.RoutingKey).Msg("Failed to bind")
+			log.Error().Err(err).Str(logExhange, binding.Exchange).Str(logQueue, uniqueQueue).Str(logRoutingKey, binding.RoutingKey).Msg("Failed to bind")
 			return ErrCannotBeConnected
 		}
 	}
@@ -152,7 +112,7 @@ func (broker *MessageBroker) handleAMQPConnection() {
 	}
 }
 
-func (broker *MessageBroker) Publish(msg *RabbitMQMessage, topic, routingKey, correlationId string) error {
+func (broker *MessageBroker) Publish(msg *RabbitMQMessage, exchange Exchange, routingKey, correlationId string) error {
 	if !broker.IsConnected() {
 		return ErrMustBeConnected
 	}
@@ -163,9 +123,9 @@ func (broker *MessageBroker) Publish(msg *RabbitMQMessage, topic, routingKey, co
 		return err
 	}
 
-	log.Debug().Str(logTopic, topic).Str(logRoutingKey, routingKey).Str(logContent, string(data)).Msgf("Sending message...")
+	log.Debug().Str(logExhange, string(exchange)).Str(logRoutingKey, routingKey).Str(logContent, string(data)).Msgf("Sending message...")
 	err = broker.publisherChannel.Publish(
-		topic,
+		string(exchange),
 		routingKey,
 		false,
 		false,
@@ -222,7 +182,7 @@ func (broker *MessageBroker) callConsumer(consumer MessageConsumer, message *Rab
 			log.Error().Interface(logPanic, err).Msgf("Message consumer panicked. Continuing...")
 		}
 	}()
-	consumer(message, correlationId)
+	consumer(context.WithValue(context.Background(), ContextCorrelationId, correlationId), message, correlationId)
 }
 
 func (broker *MessageBroker) IsConnected() bool {
