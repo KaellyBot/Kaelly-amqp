@@ -81,11 +81,15 @@ func (broker *MessageBroker) declareBindings() error {
 		err = broker.consumerChannel.QueueBind(
 			uniqueQueue,
 			binding.RoutingKey,
-			binding.Exchange,
+			string(binding.Exchange),
 			false,
 			nil)
 		if err != nil {
-			log.Error().Err(err).Str(logExhange, binding.Exchange).Str(logQueue, uniqueQueue).Str(logRoutingKey, binding.RoutingKey).Msg("Failed to bind")
+			log.Error().Err(err).
+				Str(logExchange, string(binding.Exchange)).
+				Str(logQueue, uniqueQueue).
+				Str(logRoutingKey, binding.RoutingKey).
+				Msg("Failed to bind")
 			return ErrCannotBeConnected
 		}
 	}
@@ -123,7 +127,11 @@ func (broker *MessageBroker) Publish(msg *RabbitMQMessage, exchange Exchange, ro
 		return err
 	}
 
-	log.Debug().Str(logExhange, string(exchange)).Str(logRoutingKey, routingKey).Str(logContent, string(data)).Msgf("Sending message...")
+	log.Debug().
+		Str(logExchange, string(exchange)).
+		Str(logRoutingKey, routingKey).
+		Str(logContent, string(data)).
+		Msgf("Sending message...")
 	err = broker.publisherChannel.Publish(
 		string(exchange),
 		routingKey,

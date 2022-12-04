@@ -9,8 +9,9 @@ import (
 )
 
 const (
-	ExchangeAnswer Exchange = "answers"
-	ExchangeNews            = "news"
+	ExchangeRequest Exchange = "requests"
+	ExchangeAnswer           = "answers"
+	ExchangeNews             = "news"
 
 	ContextCorrelationId = "correlationId"
 )
@@ -43,7 +44,7 @@ type MessageBroker struct {
 }
 
 type Binding struct {
+	Exchange   Exchange
 	RoutingKey string
-	Exchange   string
 	Queue      string
 }

@@ -1,7 +1,7 @@
 package amqp
 
 const (
-	logExhange    = "amqpExchange"
+	logExchange   = "amqpExchange"
 	logRoutingKey = "amqpRoutingKey"
 	logQueue      = "amqpQueue"
 	logProto      = "amqpProto"
