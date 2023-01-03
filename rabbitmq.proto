@@ -12,30 +12,22 @@ message RabbitMQMessage
     Language language = 2;
     Status   status   = 3;
     
-    NewsTwitterMessage          newsTwitterMessage          = 10;
-    NewsRSSMessage              newsRSSMessage              = 11;
-    PortalPositionRequest       portalPositionRequest       = 12;
-    PortalPositionAnswer        portalPositionAnswer        = 13;
-    ConfigurationDisplayRequest configurationDisplayRequest = 14;
-    ConfigurationDisplayAnswer  configurationDisplayAnswer  = 15;
-    ConfigurationWebhookRequest configurationWebhookRequest = 16;
-    ConfigurationWebhookAnswer  configurationWebhookAnswer  = 17;
-    ConfigurationServerRequest  configurationServerRequest  = 18;
-    ConfigurationServerAnswer   configurationServerAnswer   = 19;
+    NewsTwitterMessage    newsTwitterMessage    = 10;
+    NewsRSSMessage        newsRSSMessage        = 11;
+    PortalPositionRequest portalPositionRequest = 12;
+    PortalPositionAnswer  portalPositionAnswer  = 13;
+    ConfigurationRequest  configurationRequest  = 14;
+    ConfigurationAnswer   configurationAnswer   = 15;
 
     enum Type
     {
-        UNKNOWN                       =  0;
-        NEWS_RSS                      =  1;
-        NEWS_TWITTER                  =  2;
-        PORTAL_POSITION_REQUEST       =  3;
-        PORTAL_POSITION_ANSWER        =  4;
-        CONFIGURATION_DISPLAY_REQUEST =  5;
-        CONFIGURATION_DISPLAY_ANSWER  =  6;
-        CONFIGURATION_WEBHOOK_REQUEST =  7;
-        CONFIGURATION_WEBHOOK_ANSWER  =  8;
-        CONFIGURATION_SERVER_REQUEST  =  9;
-        CONFIGURATION_SERVER_ANSWER   = 10;
+        UNKNOWN                 = 0;
+        NEWS_RSS                = 1;
+        NEWS_TWITTER            = 2;
+        PORTAL_POSITION_REQUEST = 3;
+        PORTAL_POSITION_ANSWER  = 4;
+        CONFIGURATION_REQUEST   = 6;
+        CONFIGURATION_ANSWER    = 7;
     }
 
     enum Language 
@@ -118,42 +110,35 @@ message PortalPositionAnswer
     }
 }
 
-message ConfigurationDisplayRequest
+message ConfigurationRequest
 {
-    string guildId = 1;
-}
+    string       guildId      = 1;
+    string       channelId    = 2;
+    Field        field        = 3;
+    ServerField  serverField  = 4;
+    WebhookField webhookField = 5;
 
-message ConfigurationDisplayAnswer
-{
-    // TODO
-    string guildId = 1;
-}
+    message ServerField {
+        string serverId  = 1;
+    }
 
-message ConfigurationWebhookRequest
-{
-    string   guildId   = 1;
-    string   channelId = 2;
-    bool     enabled   = 3;
-    Provider provider  = 4;
+    message WebhookField {
+        bool     enabled   = 1;
+        Provider provider  = 2;
+    
+        enum Provider {
+            ALMANAX = 0;
+            RSS     = 1;
+            TWITTER = 2;
+        }
+    }
 
-    enum Provider {
-        ALMANAX = 0;
-        RSS     = 1;
-        TWITTER = 2;
+    enum Field {
+        SERVER  = 0;
+        WEBHOOK = 1;
     }
 }
 
-message ConfigurationWebhookAnswer
-{
-}
-
-message ConfigurationServerRequest
-{
-    string guildId   = 1;
-    string channelId = 2;
-    string serverId  = 3;
-}
-
-message ConfigurationServerAnswer
+message ConfigurationAnswer
 {
 }
