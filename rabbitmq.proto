@@ -123,8 +123,10 @@ message ConfigurationRequest
     }
 
     message WebhookField {
-        bool     enabled   = 1;
-        Provider provider  = 2;
+        string   webhookId    = 1;
+        string   webhookToken = 2;
+        bool     enabled      = 3;
+        Provider provider     = 4;
     
         enum Provider {
             ALMANAX = 0;
