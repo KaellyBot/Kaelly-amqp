@@ -42,19 +42,19 @@ message RabbitMQMessage
         JOB_SET_ANSWER            = 12;
     }
 
-    enum Language 
-    {
-        ANY = 0;
-        FR  = 1;
-        EN  = 2;
-        ES  = 3;
-    }
-
     enum Status 
     {
         SUCCESS = 0;
         FAILED  = 1;
     }
+}
+
+enum Language 
+{
+    ANY = 0;
+    FR  = 1;
+    EN  = 2;
+    ES  = 3;
 }
 
 message NewsTwitterMessage
@@ -129,7 +129,28 @@ message ConfigurationGetRequest
 
 message ConfigurationGetAnswer
 {
-    // TODO
+    string                  guildId         = 1;
+    string                  serverId        = 2;
+    repeated ChannelServer  channelServers  = 3;
+    repeated ChannelWebhook channelWebhooks = 4;
+
+    message ChannelServer {
+        string channelId = 1;
+        string serverId  = 2;
+    }
+
+    message ChannelWebhook {
+        string   channelId = 1;
+        Provider provider  = 2;
+        Language language  = 3;
+
+        enum Provider 
+        {
+            ALMANAX = 0;
+            RSS     = 1;
+            TWITTER = 2;
+        }
+    }
 }
 
 message ConfigurationSetRequest
