@@ -85,10 +85,12 @@ const (
 	RabbitMQMessage_CONFIGURATION_GET_ANSWER  RabbitMQMessage_Type = 6
 	RabbitMQMessage_CONFIGURATION_SET_REQUEST RabbitMQMessage_Type = 7
 	RabbitMQMessage_CONFIGURATION_SET_ANSWER  RabbitMQMessage_Type = 8
-	RabbitMQMessage_JOB_GET_REQUEST           RabbitMQMessage_Type = 9
-	RabbitMQMessage_JOB_GET_ANSWER            RabbitMQMessage_Type = 10
-	RabbitMQMessage_JOB_SET_REQUEST           RabbitMQMessage_Type = 11
-	RabbitMQMessage_JOB_SET_ANSWER            RabbitMQMessage_Type = 12
+	RabbitMQMessage_JOB_GET_BOOK_REQUEST      RabbitMQMessage_Type = 9
+	RabbitMQMessage_JOB_GET_BOOK_ANSWER       RabbitMQMessage_Type = 10
+	RabbitMQMessage_JOB_GET_USER_REQUEST      RabbitMQMessage_Type = 11
+	RabbitMQMessage_JOB_GET_USER_ANSWER       RabbitMQMessage_Type = 12
+	RabbitMQMessage_JOB_SET_REQUEST           RabbitMQMessage_Type = 13
+	RabbitMQMessage_JOB_SET_ANSWER            RabbitMQMessage_Type = 14
 )
 
 // Enum value maps for RabbitMQMessage_Type.
@@ -103,10 +105,12 @@ var (
 		6:  "CONFIGURATION_GET_ANSWER",
 		7:  "CONFIGURATION_SET_REQUEST",
 		8:  "CONFIGURATION_SET_ANSWER",
-		9:  "JOB_GET_REQUEST",
-		10: "JOB_GET_ANSWER",
-		11: "JOB_SET_REQUEST",
-		12: "JOB_SET_ANSWER",
+		9:  "JOB_GET_BOOK_REQUEST",
+		10: "JOB_GET_BOOK_ANSWER",
+		11: "JOB_GET_USER_REQUEST",
+		12: "JOB_GET_USER_ANSWER",
+		13: "JOB_SET_REQUEST",
+		14: "JOB_SET_ANSWER",
 	}
 	RabbitMQMessage_Type_value = map[string]int32{
 		"UNKNOWN":                   0,
@@ -118,10 +122,12 @@ var (
 		"CONFIGURATION_GET_ANSWER":  6,
 		"CONFIGURATION_SET_REQUEST": 7,
 		"CONFIGURATION_SET_ANSWER":  8,
-		"JOB_GET_REQUEST":           9,
-		"JOB_GET_ANSWER":            10,
-		"JOB_SET_REQUEST":           11,
-		"JOB_SET_ANSWER":            12,
+		"JOB_GET_BOOK_REQUEST":      9,
+		"JOB_GET_BOOK_ANSWER":       10,
+		"JOB_GET_USER_REQUEST":      11,
+		"JOB_GET_USER_ANSWER":       12,
+		"JOB_SET_REQUEST":           13,
+		"JOB_SET_ANSWER":            14,
 	}
 )
 
@@ -358,10 +364,12 @@ type RabbitMQMessage struct {
 	ConfigurationGetAnswer  *ConfigurationGetAnswer  `protobuf:"bytes,15,opt,name=configurationGetAnswer,proto3" json:"configurationGetAnswer,omitempty"`
 	ConfigurationSetRequest *ConfigurationSetRequest `protobuf:"bytes,16,opt,name=configurationSetRequest,proto3" json:"configurationSetRequest,omitempty"`
 	ConfigurationSetAnswer  *ConfigurationSetAnswer  `protobuf:"bytes,17,opt,name=configurationSetAnswer,proto3" json:"configurationSetAnswer,omitempty"`
-	JobGetRequest           *JobGetRequest           `protobuf:"bytes,18,opt,name=jobGetRequest,proto3" json:"jobGetRequest,omitempty"`
-	JobGetAnswer            *JobGetAnswer            `protobuf:"bytes,19,opt,name=jobGetAnswer,proto3" json:"jobGetAnswer,omitempty"`
-	JobSetRequest           *JobSetRequest           `protobuf:"bytes,20,opt,name=jobSetRequest,proto3" json:"jobSetRequest,omitempty"`
-	JobSetAnswer            *JobSetAnswer            `protobuf:"bytes,21,opt,name=jobSetAnswer,proto3" json:"jobSetAnswer,omitempty"`
+	JobGetBookRequest       *JobGetBookRequest       `protobuf:"bytes,18,opt,name=jobGetBookRequest,proto3" json:"jobGetBookRequest,omitempty"`
+	JobGetBookAnswer        *JobGetBookAnswer        `protobuf:"bytes,19,opt,name=jobGetBookAnswer,proto3" json:"jobGetBookAnswer,omitempty"`
+	JobGetUserRequest       *JobGetUserRequest       `protobuf:"bytes,20,opt,name=jobGetUserRequest,proto3" json:"jobGetUserRequest,omitempty"`
+	JobGetUserAnswer        *JobGetUserAnswer        `protobuf:"bytes,21,opt,name=jobGetUserAnswer,proto3" json:"jobGetUserAnswer,omitempty"`
+	JobSetRequest           *JobSetRequest           `protobuf:"bytes,22,opt,name=jobSetRequest,proto3" json:"jobSetRequest,omitempty"`
+	JobSetAnswer            *JobSetAnswer            `protobuf:"bytes,23,opt,name=jobSetAnswer,proto3" json:"jobSetAnswer,omitempty"`
 }
 
 func (x *RabbitMQMessage) Reset() {
@@ -473,16 +481,30 @@ func (x *RabbitMQMessage) GetConfigurationSetAnswer() *ConfigurationSetAnswer {
 	return nil
 }
 
-func (x *RabbitMQMessage) GetJobGetRequest() *JobGetRequest {
+func (x *RabbitMQMessage) GetJobGetBookRequest() *JobGetBookRequest {
 	if x != nil {
-		return x.JobGetRequest
+		return x.JobGetBookRequest
 	}
 	return nil
 }
 
-func (x *RabbitMQMessage) GetJobGetAnswer() *JobGetAnswer {
+func (x *RabbitMQMessage) GetJobGetBookAnswer() *JobGetBookAnswer {
 	if x != nil {
-		return x.JobGetAnswer
+		return x.JobGetBookAnswer
+	}
+	return nil
+}
+
+func (x *RabbitMQMessage) GetJobGetUserRequest() *JobGetUserRequest {
+	if x != nil {
+		return x.JobGetUserRequest
+	}
+	return nil
+}
+
+func (x *RabbitMQMessage) GetJobGetUserAnswer() *JobGetUserAnswer {
+	if x != nil {
+		return x.JobGetUserAnswer
 	}
 	return nil
 }
@@ -1012,7 +1034,7 @@ func (*ConfigurationSetAnswer) Descriptor() ([]byte, []int) {
 	return file_rabbitmq_proto_rawDescGZIP(), []int{8}
 }
 
-type JobGetRequest struct {
+type JobGetBookRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1023,8 +1045,8 @@ type JobGetRequest struct {
 	Limit    int64    `protobuf:"varint,4,opt,name=limit,proto3" json:"limit,omitempty"`
 }
 
-func (x *JobGetRequest) Reset() {
-	*x = JobGetRequest{}
+func (x *JobGetBookRequest) Reset() {
+	*x = JobGetBookRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_rabbitmq_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1032,13 +1054,13 @@ func (x *JobGetRequest) Reset() {
 	}
 }
 
-func (x *JobGetRequest) String() string {
+func (x *JobGetBookRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*JobGetRequest) ProtoMessage() {}
+func (*JobGetBookRequest) ProtoMessage() {}
 
-func (x *JobGetRequest) ProtoReflect() protoreflect.Message {
+func (x *JobGetBookRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_rabbitmq_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1050,51 +1072,51 @@ func (x *JobGetRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use JobGetRequest.ProtoReflect.Descriptor instead.
-func (*JobGetRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use JobGetBookRequest.ProtoReflect.Descriptor instead.
+func (*JobGetBookRequest) Descriptor() ([]byte, []int) {
 	return file_rabbitmq_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *JobGetRequest) GetUserIds() []string {
+func (x *JobGetBookRequest) GetUserIds() []string {
 	if x != nil {
 		return x.UserIds
 	}
 	return nil
 }
 
-func (x *JobGetRequest) GetJobId() string {
+func (x *JobGetBookRequest) GetJobId() string {
 	if x != nil {
 		return x.JobId
 	}
 	return ""
 }
 
-func (x *JobGetRequest) GetServerId() string {
+func (x *JobGetBookRequest) GetServerId() string {
 	if x != nil {
 		return x.ServerId
 	}
 	return ""
 }
 
-func (x *JobGetRequest) GetLimit() int64 {
+func (x *JobGetBookRequest) GetLimit() int64 {
 	if x != nil {
 		return x.Limit
 	}
 	return 0
 }
 
-type JobGetAnswer struct {
+type JobGetBookAnswer struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	JobId     string                    `protobuf:"bytes,1,opt,name=jobId,proto3" json:"jobId,omitempty"`
-	ServerId  string                    `protobuf:"bytes,2,opt,name=serverId,proto3" json:"serverId,omitempty"`
-	Craftsmen []*JobGetAnswer_Craftsman `protobuf:"bytes,3,rep,name=craftsmen,proto3" json:"craftsmen,omitempty"`
+	JobId     string                        `protobuf:"bytes,1,opt,name=jobId,proto3" json:"jobId,omitempty"`
+	ServerId  string                        `protobuf:"bytes,2,opt,name=serverId,proto3" json:"serverId,omitempty"`
+	Craftsmen []*JobGetBookAnswer_Craftsman `protobuf:"bytes,3,rep,name=craftsmen,proto3" json:"craftsmen,omitempty"`
 }
 
-func (x *JobGetAnswer) Reset() {
-	*x = JobGetAnswer{}
+func (x *JobGetBookAnswer) Reset() {
+	*x = JobGetBookAnswer{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_rabbitmq_proto_msgTypes[10]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1102,13 +1124,13 @@ func (x *JobGetAnswer) Reset() {
 	}
 }
 
-func (x *JobGetAnswer) String() string {
+func (x *JobGetBookAnswer) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*JobGetAnswer) ProtoMessage() {}
+func (*JobGetBookAnswer) ProtoMessage() {}
 
-func (x *JobGetAnswer) ProtoReflect() protoreflect.Message {
+func (x *JobGetBookAnswer) ProtoReflect() protoreflect.Message {
 	mi := &file_rabbitmq_proto_msgTypes[10]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1120,28 +1142,138 @@ func (x *JobGetAnswer) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use JobGetAnswer.ProtoReflect.Descriptor instead.
-func (*JobGetAnswer) Descriptor() ([]byte, []int) {
+// Deprecated: Use JobGetBookAnswer.ProtoReflect.Descriptor instead.
+func (*JobGetBookAnswer) Descriptor() ([]byte, []int) {
 	return file_rabbitmq_proto_rawDescGZIP(), []int{10}
 }
 
-func (x *JobGetAnswer) GetJobId() string {
+func (x *JobGetBookAnswer) GetJobId() string {
 	if x != nil {
 		return x.JobId
 	}
 	return ""
 }
 
-func (x *JobGetAnswer) GetServerId() string {
+func (x *JobGetBookAnswer) GetServerId() string {
 	if x != nil {
 		return x.ServerId
 	}
 	return ""
 }
 
-func (x *JobGetAnswer) GetCraftsmen() []*JobGetAnswer_Craftsman {
+func (x *JobGetBookAnswer) GetCraftsmen() []*JobGetBookAnswer_Craftsman {
 	if x != nil {
 		return x.Craftsmen
+	}
+	return nil
+}
+
+type JobGetUserRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	UserId   string `protobuf:"bytes,1,opt,name=userId,proto3" json:"userId,omitempty"`
+	ServerId string `protobuf:"bytes,2,opt,name=serverId,proto3" json:"serverId,omitempty"`
+}
+
+func (x *JobGetUserRequest) Reset() {
+	*x = JobGetUserRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_rabbitmq_proto_msgTypes[11]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *JobGetUserRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*JobGetUserRequest) ProtoMessage() {}
+
+func (x *JobGetUserRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_rabbitmq_proto_msgTypes[11]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use JobGetUserRequest.ProtoReflect.Descriptor instead.
+func (*JobGetUserRequest) Descriptor() ([]byte, []int) {
+	return file_rabbitmq_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *JobGetUserRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *JobGetUserRequest) GetServerId() string {
+	if x != nil {
+		return x.ServerId
+	}
+	return ""
+}
+
+type JobGetUserAnswer struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	ServerId string                            `protobuf:"bytes,1,opt,name=serverId,proto3" json:"serverId,omitempty"`
+	Jobs     []*JobGetUserAnswer_JobExperience `protobuf:"bytes,2,rep,name=jobs,proto3" json:"jobs,omitempty"`
+}
+
+func (x *JobGetUserAnswer) Reset() {
+	*x = JobGetUserAnswer{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_rabbitmq_proto_msgTypes[12]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *JobGetUserAnswer) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*JobGetUserAnswer) ProtoMessage() {}
+
+func (x *JobGetUserAnswer) ProtoReflect() protoreflect.Message {
+	mi := &file_rabbitmq_proto_msgTypes[12]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use JobGetUserAnswer.ProtoReflect.Descriptor instead.
+func (*JobGetUserAnswer) Descriptor() ([]byte, []int) {
+	return file_rabbitmq_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *JobGetUserAnswer) GetServerId() string {
+	if x != nil {
+		return x.ServerId
+	}
+	return ""
+}
+
+func (x *JobGetUserAnswer) GetJobs() []*JobGetUserAnswer_JobExperience {
+	if x != nil {
+		return x.Jobs
 	}
 	return nil
 }
@@ -1160,7 +1292,7 @@ type JobSetRequest struct {
 func (x *JobSetRequest) Reset() {
 	*x = JobSetRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_rabbitmq_proto_msgTypes[11]
+		mi := &file_rabbitmq_proto_msgTypes[13]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1173,7 +1305,7 @@ func (x *JobSetRequest) String() string {
 func (*JobSetRequest) ProtoMessage() {}
 
 func (x *JobSetRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_rabbitmq_proto_msgTypes[11]
+	mi := &file_rabbitmq_proto_msgTypes[13]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1186,7 +1318,7 @@ func (x *JobSetRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use JobSetRequest.ProtoReflect.Descriptor instead.
 func (*JobSetRequest) Descriptor() ([]byte, []int) {
-	return file_rabbitmq_proto_rawDescGZIP(), []int{11}
+	return file_rabbitmq_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *JobSetRequest) GetUserId() string {
@@ -1226,7 +1358,7 @@ type JobSetAnswer struct {
 func (x *JobSetAnswer) Reset() {
 	*x = JobSetAnswer{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_rabbitmq_proto_msgTypes[12]
+		mi := &file_rabbitmq_proto_msgTypes[14]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1239,7 +1371,7 @@ func (x *JobSetAnswer) String() string {
 func (*JobSetAnswer) ProtoMessage() {}
 
 func (x *JobSetAnswer) ProtoReflect() protoreflect.Message {
-	mi := &file_rabbitmq_proto_msgTypes[12]
+	mi := &file_rabbitmq_proto_msgTypes[14]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1252,7 +1384,7 @@ func (x *JobSetAnswer) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use JobSetAnswer.ProtoReflect.Descriptor instead.
 func (*JobSetAnswer) Descriptor() ([]byte, []int) {
-	return file_rabbitmq_proto_rawDescGZIP(), []int{12}
+	return file_rabbitmq_proto_rawDescGZIP(), []int{14}
 }
 
 type PortalPositionAnswer_PortalPosition struct {
@@ -1274,7 +1406,7 @@ type PortalPositionAnswer_PortalPosition struct {
 func (x *PortalPositionAnswer_PortalPosition) Reset() {
 	*x = PortalPositionAnswer_PortalPosition{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_rabbitmq_proto_msgTypes[13]
+		mi := &file_rabbitmq_proto_msgTypes[15]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1287,7 +1419,7 @@ func (x *PortalPositionAnswer_PortalPosition) String() string {
 func (*PortalPositionAnswer_PortalPosition) ProtoMessage() {}
 
 func (x *PortalPositionAnswer_PortalPosition) ProtoReflect() protoreflect.Message {
-	mi := &file_rabbitmq_proto_msgTypes[13]
+	mi := &file_rabbitmq_proto_msgTypes[15]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1381,7 +1513,7 @@ type PortalPositionAnswer_PortalPosition_Position struct {
 func (x *PortalPositionAnswer_PortalPosition_Position) Reset() {
 	*x = PortalPositionAnswer_PortalPosition_Position{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_rabbitmq_proto_msgTypes[14]
+		mi := &file_rabbitmq_proto_msgTypes[16]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1394,7 +1526,7 @@ func (x *PortalPositionAnswer_PortalPosition_Position) String() string {
 func (*PortalPositionAnswer_PortalPosition_Position) ProtoMessage() {}
 
 func (x *PortalPositionAnswer_PortalPosition_Position) ProtoReflect() protoreflect.Message {
-	mi := &file_rabbitmq_proto_msgTypes[14]
+	mi := &file_rabbitmq_proto_msgTypes[16]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1458,7 +1590,7 @@ type PortalPositionAnswer_PortalPosition_Source struct {
 func (x *PortalPositionAnswer_PortalPosition_Source) Reset() {
 	*x = PortalPositionAnswer_PortalPosition_Source{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_rabbitmq_proto_msgTypes[15]
+		mi := &file_rabbitmq_proto_msgTypes[17]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1471,7 +1603,7 @@ func (x *PortalPositionAnswer_PortalPosition_Source) String() string {
 func (*PortalPositionAnswer_PortalPosition_Source) ProtoMessage() {}
 
 func (x *PortalPositionAnswer_PortalPosition_Source) ProtoReflect() protoreflect.Message {
-	mi := &file_rabbitmq_proto_msgTypes[15]
+	mi := &file_rabbitmq_proto_msgTypes[17]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1523,7 +1655,7 @@ type PortalPositionAnswer_PortalPosition_Position_Transport struct {
 func (x *PortalPositionAnswer_PortalPosition_Position_Transport) Reset() {
 	*x = PortalPositionAnswer_PortalPosition_Position_Transport{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_rabbitmq_proto_msgTypes[16]
+		mi := &file_rabbitmq_proto_msgTypes[18]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1536,7 +1668,7 @@ func (x *PortalPositionAnswer_PortalPosition_Position_Transport) String() string
 func (*PortalPositionAnswer_PortalPosition_Position_Transport) ProtoMessage() {}
 
 func (x *PortalPositionAnswer_PortalPosition_Position_Transport) ProtoReflect() protoreflect.Message {
-	mi := &file_rabbitmq_proto_msgTypes[16]
+	mi := &file_rabbitmq_proto_msgTypes[18]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1599,7 +1731,7 @@ type ConfigurationGetAnswer_ChannelServer struct {
 func (x *ConfigurationGetAnswer_ChannelServer) Reset() {
 	*x = ConfigurationGetAnswer_ChannelServer{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_rabbitmq_proto_msgTypes[17]
+		mi := &file_rabbitmq_proto_msgTypes[19]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1612,7 +1744,7 @@ func (x *ConfigurationGetAnswer_ChannelServer) String() string {
 func (*ConfigurationGetAnswer_ChannelServer) ProtoMessage() {}
 
 func (x *ConfigurationGetAnswer_ChannelServer) ProtoReflect() protoreflect.Message {
-	mi := &file_rabbitmq_proto_msgTypes[17]
+	mi := &file_rabbitmq_proto_msgTypes[19]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1655,7 +1787,7 @@ type ConfigurationGetAnswer_ChannelWebhook struct {
 func (x *ConfigurationGetAnswer_ChannelWebhook) Reset() {
 	*x = ConfigurationGetAnswer_ChannelWebhook{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_rabbitmq_proto_msgTypes[18]
+		mi := &file_rabbitmq_proto_msgTypes[20]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1668,7 +1800,7 @@ func (x *ConfigurationGetAnswer_ChannelWebhook) String() string {
 func (*ConfigurationGetAnswer_ChannelWebhook) ProtoMessage() {}
 
 func (x *ConfigurationGetAnswer_ChannelWebhook) ProtoReflect() protoreflect.Message {
-	mi := &file_rabbitmq_proto_msgTypes[18]
+	mi := &file_rabbitmq_proto_msgTypes[20]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1716,7 +1848,7 @@ type ConfigurationSetRequest_ServerField struct {
 func (x *ConfigurationSetRequest_ServerField) Reset() {
 	*x = ConfigurationSetRequest_ServerField{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_rabbitmq_proto_msgTypes[19]
+		mi := &file_rabbitmq_proto_msgTypes[21]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1729,7 +1861,7 @@ func (x *ConfigurationSetRequest_ServerField) String() string {
 func (*ConfigurationSetRequest_ServerField) ProtoMessage() {}
 
 func (x *ConfigurationSetRequest_ServerField) ProtoReflect() protoreflect.Message {
-	mi := &file_rabbitmq_proto_msgTypes[19]
+	mi := &file_rabbitmq_proto_msgTypes[21]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1766,7 +1898,7 @@ type ConfigurationSetRequest_WebhookField struct {
 func (x *ConfigurationSetRequest_WebhookField) Reset() {
 	*x = ConfigurationSetRequest_WebhookField{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_rabbitmq_proto_msgTypes[20]
+		mi := &file_rabbitmq_proto_msgTypes[22]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1779,7 +1911,7 @@ func (x *ConfigurationSetRequest_WebhookField) String() string {
 func (*ConfigurationSetRequest_WebhookField) ProtoMessage() {}
 
 func (x *ConfigurationSetRequest_WebhookField) ProtoReflect() protoreflect.Message {
-	mi := &file_rabbitmq_proto_msgTypes[20]
+	mi := &file_rabbitmq_proto_msgTypes[22]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1823,7 +1955,7 @@ func (x *ConfigurationSetRequest_WebhookField) GetProvider() ConfigurationSetReq
 	return ConfigurationSetRequest_WebhookField_ALMANAX
 }
 
-type JobGetAnswer_Craftsman struct {
+type JobGetBookAnswer_Craftsman struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1832,23 +1964,23 @@ type JobGetAnswer_Craftsman struct {
 	Level  int64  `protobuf:"varint,2,opt,name=level,proto3" json:"level,omitempty"`
 }
 
-func (x *JobGetAnswer_Craftsman) Reset() {
-	*x = JobGetAnswer_Craftsman{}
+func (x *JobGetBookAnswer_Craftsman) Reset() {
+	*x = JobGetBookAnswer_Craftsman{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_rabbitmq_proto_msgTypes[21]
+		mi := &file_rabbitmq_proto_msgTypes[23]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
 }
 
-func (x *JobGetAnswer_Craftsman) String() string {
+func (x *JobGetBookAnswer_Craftsman) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*JobGetAnswer_Craftsman) ProtoMessage() {}
+func (*JobGetBookAnswer_Craftsman) ProtoMessage() {}
 
-func (x *JobGetAnswer_Craftsman) ProtoReflect() protoreflect.Message {
-	mi := &file_rabbitmq_proto_msgTypes[21]
+func (x *JobGetBookAnswer_Craftsman) ProtoReflect() protoreflect.Message {
+	mi := &file_rabbitmq_proto_msgTypes[23]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1859,19 +1991,74 @@ func (x *JobGetAnswer_Craftsman) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use JobGetAnswer_Craftsman.ProtoReflect.Descriptor instead.
-func (*JobGetAnswer_Craftsman) Descriptor() ([]byte, []int) {
+// Deprecated: Use JobGetBookAnswer_Craftsman.ProtoReflect.Descriptor instead.
+func (*JobGetBookAnswer_Craftsman) Descriptor() ([]byte, []int) {
 	return file_rabbitmq_proto_rawDescGZIP(), []int{10, 0}
 }
 
-func (x *JobGetAnswer_Craftsman) GetUserId() string {
+func (x *JobGetBookAnswer_Craftsman) GetUserId() string {
 	if x != nil {
 		return x.UserId
 	}
 	return ""
 }
 
-func (x *JobGetAnswer_Craftsman) GetLevel() int64 {
+func (x *JobGetBookAnswer_Craftsman) GetLevel() int64 {
+	if x != nil {
+		return x.Level
+	}
+	return 0
+}
+
+type JobGetUserAnswer_JobExperience struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	JobId string `protobuf:"bytes,1,opt,name=jobId,proto3" json:"jobId,omitempty"`
+	Level int64  `protobuf:"varint,2,opt,name=level,proto3" json:"level,omitempty"`
+}
+
+func (x *JobGetUserAnswer_JobExperience) Reset() {
+	*x = JobGetUserAnswer_JobExperience{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_rabbitmq_proto_msgTypes[24]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *JobGetUserAnswer_JobExperience) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*JobGetUserAnswer_JobExperience) ProtoMessage() {}
+
+func (x *JobGetUserAnswer_JobExperience) ProtoReflect() protoreflect.Message {
+	mi := &file_rabbitmq_proto_msgTypes[24]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use JobGetUserAnswer_JobExperience.ProtoReflect.Descriptor instead.
+func (*JobGetUserAnswer_JobExperience) Descriptor() ([]byte, []int) {
+	return file_rabbitmq_proto_rawDescGZIP(), []int{12, 0}
+}
+
+func (x *JobGetUserAnswer_JobExperience) GetJobId() string {
+	if x != nil {
+		return x.JobId
+	}
+	return ""
+}
+
+func (x *JobGetUserAnswer_JobExperience) GetLevel() int64 {
 	if x != nil {
 		return x.Level
 	}
@@ -1884,7 +2071,7 @@ var file_rabbitmq_proto_rawDesc = []byte{
 	0x0a, 0x0e, 0x72, 0x61, 0x62, 0x62, 0x69, 0x74, 0x6d, 0x71, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
 	0x12, 0x04, 0x61, 0x6d, 0x71, 0x70, 0x1a, 0x1f, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2f, 0x70,
 	0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2f, 0x74, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d,
-	0x70, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0xf0, 0x0a, 0x0a, 0x0f, 0x52, 0x61, 0x62, 0x62,
+	0x70, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0xd0, 0x0c, 0x0a, 0x0f, 0x52, 0x61, 0x62, 0x62,
 	0x69, 0x74, 0x4d, 0x51, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x2e, 0x0a, 0x04, 0x74,
 	0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x1a, 0x2e, 0x61, 0x6d, 0x71, 0x70,
 	0x2e, 0x52, 0x61, 0x62, 0x62, 0x69, 0x74, 0x4d, 0x51, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65,
@@ -1935,41 +2122,55 @@ var file_rabbitmq_proto_rawDesc = []byte{
 	0x32, 0x1c, 0x2e, 0x61, 0x6d, 0x71, 0x70, 0x2e, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x75, 0x72,
 	0x61, 0x74, 0x69, 0x6f, 0x6e, 0x53, 0x65, 0x74, 0x41, 0x6e, 0x73, 0x77, 0x65, 0x72, 0x52, 0x16,
 	0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x75, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x53, 0x65, 0x74,
-	0x41, 0x6e, 0x73, 0x77, 0x65, 0x72, 0x12, 0x39, 0x0a, 0x0d, 0x6a, 0x6f, 0x62, 0x47, 0x65, 0x74,
-	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x18, 0x12, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x13, 0x2e,
-	0x61, 0x6d, 0x71, 0x70, 0x2e, 0x4a, 0x6f, 0x62, 0x47, 0x65, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65,
-	0x73, 0x74, 0x52, 0x0d, 0x6a, 0x6f, 0x62, 0x47, 0x65, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
-	0x74, 0x12, 0x36, 0x0a, 0x0c, 0x6a, 0x6f, 0x62, 0x47, 0x65, 0x74, 0x41, 0x6e, 0x73, 0x77, 0x65,
-	0x72, 0x18, 0x13, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x12, 0x2e, 0x61, 0x6d, 0x71, 0x70, 0x2e, 0x4a,
-	0x6f, 0x62, 0x47, 0x65, 0x74, 0x41, 0x6e, 0x73, 0x77, 0x65, 0x72, 0x52, 0x0c, 0x6a, 0x6f, 0x62,
-	0x47, 0x65, 0x74, 0x41, 0x6e, 0x73, 0x77, 0x65, 0x72, 0x12, 0x39, 0x0a, 0x0d, 0x6a, 0x6f, 0x62,
-	0x53, 0x65, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x18, 0x14, 0x20, 0x01, 0x28, 0x0b,
-	0x32, 0x13, 0x2e, 0x61, 0x6d, 0x71, 0x70, 0x2e, 0x4a, 0x6f, 0x62, 0x53, 0x65, 0x74, 0x52, 0x65,
-	0x71, 0x75, 0x65, 0x73, 0x74, 0x52, 0x0d, 0x6a, 0x6f, 0x62, 0x53, 0x65, 0x74, 0x52, 0x65, 0x71,
-	0x75, 0x65, 0x73, 0x74, 0x12, 0x36, 0x0a, 0x0c, 0x6a, 0x6f, 0x62, 0x53, 0x65, 0x74, 0x41, 0x6e,
-	0x73, 0x77, 0x65, 0x72, 0x18, 0x15, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x12, 0x2e, 0x61, 0x6d, 0x71,
-	0x70, 0x2e, 0x4a, 0x6f, 0x62, 0x53, 0x65, 0x74, 0x41, 0x6e, 0x73, 0x77, 0x65, 0x72, 0x52, 0x0c,
-	0x6a, 0x6f, 0x62, 0x53, 0x65, 0x74, 0x41, 0x6e, 0x73, 0x77, 0x65, 0x72, 0x22, 0xb8, 0x02, 0x0a,
-	0x04, 0x54, 0x79, 0x70, 0x65, 0x12, 0x0b, 0x0a, 0x07, 0x55, 0x4e, 0x4b, 0x4e, 0x4f, 0x57, 0x4e,
-	0x10, 0x00, 0x12, 0x0c, 0x0a, 0x08, 0x4e, 0x45, 0x57, 0x53, 0x5f, 0x52, 0x53, 0x53, 0x10, 0x01,
-	0x12, 0x10, 0x0a, 0x0c, 0x4e, 0x45, 0x57, 0x53, 0x5f, 0x54, 0x57, 0x49, 0x54, 0x54, 0x45, 0x52,
-	0x10, 0x02, 0x12, 0x1b, 0x0a, 0x17, 0x50, 0x4f, 0x52, 0x54, 0x41, 0x4c, 0x5f, 0x50, 0x4f, 0x53,
-	0x49, 0x54, 0x49, 0x4f, 0x4e, 0x5f, 0x52, 0x45, 0x51, 0x55, 0x45, 0x53, 0x54, 0x10, 0x03, 0x12,
-	0x1a, 0x0a, 0x16, 0x50, 0x4f, 0x52, 0x54, 0x41, 0x4c, 0x5f, 0x50, 0x4f, 0x53, 0x49, 0x54, 0x49,
-	0x4f, 0x4e, 0x5f, 0x41, 0x4e, 0x53, 0x57, 0x45, 0x52, 0x10, 0x04, 0x12, 0x1d, 0x0a, 0x19, 0x43,
-	0x4f, 0x4e, 0x46, 0x49, 0x47, 0x55, 0x52, 0x41, 0x54, 0x49, 0x4f, 0x4e, 0x5f, 0x47, 0x45, 0x54,
-	0x5f, 0x52, 0x45, 0x51, 0x55, 0x45, 0x53, 0x54, 0x10, 0x05, 0x12, 0x1c, 0x0a, 0x18, 0x43, 0x4f,
-	0x4e, 0x46, 0x49, 0x47, 0x55, 0x52, 0x41, 0x54, 0x49, 0x4f, 0x4e, 0x5f, 0x47, 0x45, 0x54, 0x5f,
-	0x41, 0x4e, 0x53, 0x57, 0x45, 0x52, 0x10, 0x06, 0x12, 0x1d, 0x0a, 0x19, 0x43, 0x4f, 0x4e, 0x46,
-	0x49, 0x47, 0x55, 0x52, 0x41, 0x54, 0x49, 0x4f, 0x4e, 0x5f, 0x53, 0x45, 0x54, 0x5f, 0x52, 0x45,
-	0x51, 0x55, 0x45, 0x53, 0x54, 0x10, 0x07, 0x12, 0x1c, 0x0a, 0x18, 0x43, 0x4f, 0x4e, 0x46, 0x49,
-	0x47, 0x55, 0x52, 0x41, 0x54, 0x49, 0x4f, 0x4e, 0x5f, 0x53, 0x45, 0x54, 0x5f, 0x41, 0x4e, 0x53,
-	0x57, 0x45, 0x52, 0x10, 0x08, 0x12, 0x13, 0x0a, 0x0f, 0x4a, 0x4f, 0x42, 0x5f, 0x47, 0x45, 0x54,
-	0x5f, 0x52, 0x45, 0x51, 0x55, 0x45, 0x53, 0x54, 0x10, 0x09, 0x12, 0x12, 0x0a, 0x0e, 0x4a, 0x4f,
-	0x42, 0x5f, 0x47, 0x45, 0x54, 0x5f, 0x41, 0x4e, 0x53, 0x57, 0x45, 0x52, 0x10, 0x0a, 0x12, 0x13,
+	0x41, 0x6e, 0x73, 0x77, 0x65, 0x72, 0x12, 0x45, 0x0a, 0x11, 0x6a, 0x6f, 0x62, 0x47, 0x65, 0x74,
+	0x42, 0x6f, 0x6f, 0x6b, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x18, 0x12, 0x20, 0x01, 0x28,
+	0x0b, 0x32, 0x17, 0x2e, 0x61, 0x6d, 0x71, 0x70, 0x2e, 0x4a, 0x6f, 0x62, 0x47, 0x65, 0x74, 0x42,
+	0x6f, 0x6f, 0x6b, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x52, 0x11, 0x6a, 0x6f, 0x62, 0x47,
+	0x65, 0x74, 0x42, 0x6f, 0x6f, 0x6b, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x42, 0x0a,
+	0x10, 0x6a, 0x6f, 0x62, 0x47, 0x65, 0x74, 0x42, 0x6f, 0x6f, 0x6b, 0x41, 0x6e, 0x73, 0x77, 0x65,
+	0x72, 0x18, 0x13, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x16, 0x2e, 0x61, 0x6d, 0x71, 0x70, 0x2e, 0x4a,
+	0x6f, 0x62, 0x47, 0x65, 0x74, 0x42, 0x6f, 0x6f, 0x6b, 0x41, 0x6e, 0x73, 0x77, 0x65, 0x72, 0x52,
+	0x10, 0x6a, 0x6f, 0x62, 0x47, 0x65, 0x74, 0x42, 0x6f, 0x6f, 0x6b, 0x41, 0x6e, 0x73, 0x77, 0x65,
+	0x72, 0x12, 0x45, 0x0a, 0x11, 0x6a, 0x6f, 0x62, 0x47, 0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x18, 0x14, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x17, 0x2e, 0x61,
+	0x6d, 0x71, 0x70, 0x2e, 0x4a, 0x6f, 0x62, 0x47, 0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x52, 0x11, 0x6a, 0x6f, 0x62, 0x47, 0x65, 0x74, 0x55, 0x73, 0x65,
+	0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x42, 0x0a, 0x10, 0x6a, 0x6f, 0x62, 0x47,
+	0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x41, 0x6e, 0x73, 0x77, 0x65, 0x72, 0x18, 0x15, 0x20, 0x01,
+	0x28, 0x0b, 0x32, 0x16, 0x2e, 0x61, 0x6d, 0x71, 0x70, 0x2e, 0x4a, 0x6f, 0x62, 0x47, 0x65, 0x74,
+	0x55, 0x73, 0x65, 0x72, 0x41, 0x6e, 0x73, 0x77, 0x65, 0x72, 0x52, 0x10, 0x6a, 0x6f, 0x62, 0x47,
+	0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x41, 0x6e, 0x73, 0x77, 0x65, 0x72, 0x12, 0x39, 0x0a, 0x0d,
+	0x6a, 0x6f, 0x62, 0x53, 0x65, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x18, 0x16, 0x20,
+	0x01, 0x28, 0x0b, 0x32, 0x13, 0x2e, 0x61, 0x6d, 0x71, 0x70, 0x2e, 0x4a, 0x6f, 0x62, 0x53, 0x65,
+	0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x52, 0x0d, 0x6a, 0x6f, 0x62, 0x53, 0x65, 0x74,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x36, 0x0a, 0x0c, 0x6a, 0x6f, 0x62, 0x53, 0x65,
+	0x74, 0x41, 0x6e, 0x73, 0x77, 0x65, 0x72, 0x18, 0x17, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x12, 0x2e,
+	0x61, 0x6d, 0x71, 0x70, 0x2e, 0x4a, 0x6f, 0x62, 0x53, 0x65, 0x74, 0x41, 0x6e, 0x73, 0x77, 0x65,
+	0x72, 0x52, 0x0c, 0x6a, 0x6f, 0x62, 0x53, 0x65, 0x74, 0x41, 0x6e, 0x73, 0x77, 0x65, 0x72, 0x22,
+	0xf5, 0x02, 0x0a, 0x04, 0x54, 0x79, 0x70, 0x65, 0x12, 0x0b, 0x0a, 0x07, 0x55, 0x4e, 0x4b, 0x4e,
+	0x4f, 0x57, 0x4e, 0x10, 0x00, 0x12, 0x0c, 0x0a, 0x08, 0x4e, 0x45, 0x57, 0x53, 0x5f, 0x52, 0x53,
+	0x53, 0x10, 0x01, 0x12, 0x10, 0x0a, 0x0c, 0x4e, 0x45, 0x57, 0x53, 0x5f, 0x54, 0x57, 0x49, 0x54,
+	0x54, 0x45, 0x52, 0x10, 0x02, 0x12, 0x1b, 0x0a, 0x17, 0x50, 0x4f, 0x52, 0x54, 0x41, 0x4c, 0x5f,
+	0x50, 0x4f, 0x53, 0x49, 0x54, 0x49, 0x4f, 0x4e, 0x5f, 0x52, 0x45, 0x51, 0x55, 0x45, 0x53, 0x54,
+	0x10, 0x03, 0x12, 0x1a, 0x0a, 0x16, 0x50, 0x4f, 0x52, 0x54, 0x41, 0x4c, 0x5f, 0x50, 0x4f, 0x53,
+	0x49, 0x54, 0x49, 0x4f, 0x4e, 0x5f, 0x41, 0x4e, 0x53, 0x57, 0x45, 0x52, 0x10, 0x04, 0x12, 0x1d,
+	0x0a, 0x19, 0x43, 0x4f, 0x4e, 0x46, 0x49, 0x47, 0x55, 0x52, 0x41, 0x54, 0x49, 0x4f, 0x4e, 0x5f,
+	0x47, 0x45, 0x54, 0x5f, 0x52, 0x45, 0x51, 0x55, 0x45, 0x53, 0x54, 0x10, 0x05, 0x12, 0x1c, 0x0a,
+	0x18, 0x43, 0x4f, 0x4e, 0x46, 0x49, 0x47, 0x55, 0x52, 0x41, 0x54, 0x49, 0x4f, 0x4e, 0x5f, 0x47,
+	0x45, 0x54, 0x5f, 0x41, 0x4e, 0x53, 0x57, 0x45, 0x52, 0x10, 0x06, 0x12, 0x1d, 0x0a, 0x19, 0x43,
+	0x4f, 0x4e, 0x46, 0x49, 0x47, 0x55, 0x52, 0x41, 0x54, 0x49, 0x4f, 0x4e, 0x5f, 0x53, 0x45, 0x54,
+	0x5f, 0x52, 0x45, 0x51, 0x55, 0x45, 0x53, 0x54, 0x10, 0x07, 0x12, 0x1c, 0x0a, 0x18, 0x43, 0x4f,
+	0x4e, 0x46, 0x49, 0x47, 0x55, 0x52, 0x41, 0x54, 0x49, 0x4f, 0x4e, 0x5f, 0x53, 0x45, 0x54, 0x5f,
+	0x41, 0x4e, 0x53, 0x57, 0x45, 0x52, 0x10, 0x08, 0x12, 0x18, 0x0a, 0x14, 0x4a, 0x4f, 0x42, 0x5f,
+	0x47, 0x45, 0x54, 0x5f, 0x42, 0x4f, 0x4f, 0x4b, 0x5f, 0x52, 0x45, 0x51, 0x55, 0x45, 0x53, 0x54,
+	0x10, 0x09, 0x12, 0x17, 0x0a, 0x13, 0x4a, 0x4f, 0x42, 0x5f, 0x47, 0x45, 0x54, 0x5f, 0x42, 0x4f,
+	0x4f, 0x4b, 0x5f, 0x41, 0x4e, 0x53, 0x57, 0x45, 0x52, 0x10, 0x0a, 0x12, 0x18, 0x0a, 0x14, 0x4a,
+	0x4f, 0x42, 0x5f, 0x47, 0x45, 0x54, 0x5f, 0x55, 0x53, 0x45, 0x52, 0x5f, 0x52, 0x45, 0x51, 0x55,
+	0x45, 0x53, 0x54, 0x10, 0x0b, 0x12, 0x17, 0x0a, 0x13, 0x4a, 0x4f, 0x42, 0x5f, 0x47, 0x45, 0x54,
+	0x5f, 0x55, 0x53, 0x45, 0x52, 0x5f, 0x41, 0x4e, 0x53, 0x57, 0x45, 0x52, 0x10, 0x0c, 0x12, 0x13,
 	0x0a, 0x0f, 0x4a, 0x4f, 0x42, 0x5f, 0x53, 0x45, 0x54, 0x5f, 0x52, 0x45, 0x51, 0x55, 0x45, 0x53,
-	0x54, 0x10, 0x0b, 0x12, 0x12, 0x0a, 0x0e, 0x4a, 0x4f, 0x42, 0x5f, 0x53, 0x45, 0x54, 0x5f, 0x41,
-	0x4e, 0x53, 0x57, 0x45, 0x52, 0x10, 0x0c, 0x22, 0x21, 0x0a, 0x06, 0x53, 0x74, 0x61, 0x74, 0x75,
+	0x54, 0x10, 0x0d, 0x12, 0x12, 0x0a, 0x0e, 0x4a, 0x4f, 0x42, 0x5f, 0x53, 0x45, 0x54, 0x5f, 0x41,
+	0x4e, 0x53, 0x57, 0x45, 0x52, 0x10, 0x0e, 0x22, 0x21, 0x0a, 0x06, 0x53, 0x74, 0x61, 0x74, 0x75,
 	0x73, 0x12, 0x0b, 0x0a, 0x07, 0x53, 0x55, 0x43, 0x43, 0x45, 0x53, 0x53, 0x10, 0x00, 0x12, 0x0a,
 	0x0a, 0x06, 0x46, 0x41, 0x49, 0x4c, 0x45, 0x44, 0x10, 0x01, 0x22, 0xd4, 0x01, 0x0a, 0x12, 0x4e,
 	0x65, 0x77, 0x73, 0x54, 0x77, 0x69, 0x74, 0x74, 0x65, 0x72, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67,
@@ -2141,38 +2342,54 @@ var file_rabbitmq_proto_rawDesc = []byte{
 	0x22, 0x20, 0x0a, 0x05, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x12, 0x0a, 0x0a, 0x06, 0x53, 0x45, 0x52,
 	0x56, 0x45, 0x52, 0x10, 0x00, 0x12, 0x0b, 0x0a, 0x07, 0x57, 0x45, 0x42, 0x48, 0x4f, 0x4f, 0x4b,
 	0x10, 0x01, 0x22, 0x18, 0x0a, 0x16, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x75, 0x72, 0x61, 0x74,
-	0x69, 0x6f, 0x6e, 0x53, 0x65, 0x74, 0x41, 0x6e, 0x73, 0x77, 0x65, 0x72, 0x22, 0x71, 0x0a, 0x0d,
-	0x4a, 0x6f, 0x62, 0x47, 0x65, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x18, 0x0a,
-	0x07, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x09, 0x52, 0x07,
-	0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x73, 0x12, 0x14, 0x0a, 0x05, 0x6a, 0x6f, 0x62, 0x49, 0x64,
-	0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x6a, 0x6f, 0x62, 0x49, 0x64, 0x12, 0x1a, 0x0a,
-	0x08, 0x73, 0x65, 0x72, 0x76, 0x65, 0x72, 0x49, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x08, 0x73, 0x65, 0x72, 0x76, 0x65, 0x72, 0x49, 0x64, 0x12, 0x14, 0x0a, 0x05, 0x6c, 0x69, 0x6d,
-	0x69, 0x74, 0x18, 0x04, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x6c, 0x69, 0x6d, 0x69, 0x74, 0x22,
-	0xb7, 0x01, 0x0a, 0x0c, 0x4a, 0x6f, 0x62, 0x47, 0x65, 0x74, 0x41, 0x6e, 0x73, 0x77, 0x65, 0x72,
-	0x12, 0x14, 0x0a, 0x05, 0x6a, 0x6f, 0x62, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x05, 0x6a, 0x6f, 0x62, 0x49, 0x64, 0x12, 0x1a, 0x0a, 0x08, 0x73, 0x65, 0x72, 0x76, 0x65, 0x72,
-	0x49, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x73, 0x65, 0x72, 0x76, 0x65, 0x72,
-	0x49, 0x64, 0x12, 0x3a, 0x0a, 0x09, 0x63, 0x72, 0x61, 0x66, 0x74, 0x73, 0x6d, 0x65, 0x6e, 0x18,
-	0x03, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x1c, 0x2e, 0x61, 0x6d, 0x71, 0x70, 0x2e, 0x4a, 0x6f, 0x62,
-	0x47, 0x65, 0x74, 0x41, 0x6e, 0x73, 0x77, 0x65, 0x72, 0x2e, 0x43, 0x72, 0x61, 0x66, 0x74, 0x73,
-	0x6d, 0x61, 0x6e, 0x52, 0x09, 0x63, 0x72, 0x61, 0x66, 0x74, 0x73, 0x6d, 0x65, 0x6e, 0x1a, 0x39,
-	0x0a, 0x09, 0x43, 0x72, 0x61, 0x66, 0x74, 0x73, 0x6d, 0x61, 0x6e, 0x12, 0x16, 0x0a, 0x06, 0x75,
-	0x73, 0x65, 0x72, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x75, 0x73, 0x65,
-	0x72, 0x49, 0x64, 0x12, 0x14, 0x0a, 0x05, 0x6c, 0x65, 0x76, 0x65, 0x6c, 0x18, 0x02, 0x20, 0x01,
-	0x28, 0x03, 0x52, 0x05, 0x6c, 0x65, 0x76, 0x65, 0x6c, 0x22, 0x6f, 0x0a, 0x0d, 0x4a, 0x6f, 0x62,
-	0x53, 0x65, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x16, 0x0a, 0x06, 0x75, 0x73,
+	0x69, 0x6f, 0x6e, 0x53, 0x65, 0x74, 0x41, 0x6e, 0x73, 0x77, 0x65, 0x72, 0x22, 0x75, 0x0a, 0x11,
+	0x4a, 0x6f, 0x62, 0x47, 0x65, 0x74, 0x42, 0x6f, 0x6f, 0x6b, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x74, 0x12, 0x18, 0x0a, 0x07, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x73, 0x18, 0x01, 0x20, 0x03,
+	0x28, 0x09, 0x52, 0x07, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x73, 0x12, 0x14, 0x0a, 0x05, 0x6a,
+	0x6f, 0x62, 0x49, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x6a, 0x6f, 0x62, 0x49,
+	0x64, 0x12, 0x1a, 0x0a, 0x08, 0x73, 0x65, 0x72, 0x76, 0x65, 0x72, 0x49, 0x64, 0x18, 0x03, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x08, 0x73, 0x65, 0x72, 0x76, 0x65, 0x72, 0x49, 0x64, 0x12, 0x14, 0x0a,
+	0x05, 0x6c, 0x69, 0x6d, 0x69, 0x74, 0x18, 0x04, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x6c, 0x69,
+	0x6d, 0x69, 0x74, 0x22, 0xbf, 0x01, 0x0a, 0x10, 0x4a, 0x6f, 0x62, 0x47, 0x65, 0x74, 0x42, 0x6f,
+	0x6f, 0x6b, 0x41, 0x6e, 0x73, 0x77, 0x65, 0x72, 0x12, 0x14, 0x0a, 0x05, 0x6a, 0x6f, 0x62, 0x49,
+	0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x6a, 0x6f, 0x62, 0x49, 0x64, 0x12, 0x1a,
+	0x0a, 0x08, 0x73, 0x65, 0x72, 0x76, 0x65, 0x72, 0x49, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x08, 0x73, 0x65, 0x72, 0x76, 0x65, 0x72, 0x49, 0x64, 0x12, 0x3e, 0x0a, 0x09, 0x63, 0x72,
+	0x61, 0x66, 0x74, 0x73, 0x6d, 0x65, 0x6e, 0x18, 0x03, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x20, 0x2e,
+	0x61, 0x6d, 0x71, 0x70, 0x2e, 0x4a, 0x6f, 0x62, 0x47, 0x65, 0x74, 0x42, 0x6f, 0x6f, 0x6b, 0x41,
+	0x6e, 0x73, 0x77, 0x65, 0x72, 0x2e, 0x43, 0x72, 0x61, 0x66, 0x74, 0x73, 0x6d, 0x61, 0x6e, 0x52,
+	0x09, 0x63, 0x72, 0x61, 0x66, 0x74, 0x73, 0x6d, 0x65, 0x6e, 0x1a, 0x39, 0x0a, 0x09, 0x43, 0x72,
+	0x61, 0x66, 0x74, 0x73, 0x6d, 0x61, 0x6e, 0x12, 0x16, 0x0a, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49,
+	0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x12,
+	0x14, 0x0a, 0x05, 0x6c, 0x65, 0x76, 0x65, 0x6c, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x05,
+	0x6c, 0x65, 0x76, 0x65, 0x6c, 0x22, 0x47, 0x0a, 0x11, 0x4a, 0x6f, 0x62, 0x47, 0x65, 0x74, 0x55,
+	0x73, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x16, 0x0a, 0x06, 0x75, 0x73,
 	0x65, 0x72, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x75, 0x73, 0x65, 0x72,
-	0x49, 0x64, 0x12, 0x14, 0x0a, 0x05, 0x6a, 0x6f, 0x62, 0x49, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x05, 0x6a, 0x6f, 0x62, 0x49, 0x64, 0x12, 0x1a, 0x0a, 0x08, 0x73, 0x65, 0x72, 0x76,
-	0x65, 0x72, 0x49, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x73, 0x65, 0x72, 0x76,
-	0x65, 0x72, 0x49, 0x64, 0x12, 0x14, 0x0a, 0x05, 0x6c, 0x65, 0x76, 0x65, 0x6c, 0x18, 0x04, 0x20,
-	0x01, 0x28, 0x03, 0x52, 0x05, 0x6c, 0x65, 0x76, 0x65, 0x6c, 0x22, 0x0e, 0x0a, 0x0c, 0x4a, 0x6f,
-	0x62, 0x53, 0x65, 0x74, 0x41, 0x6e, 0x73, 0x77, 0x65, 0x72, 0x2a, 0x2b, 0x0a, 0x08, 0x4c, 0x61,
-	0x6e, 0x67, 0x75, 0x61, 0x67, 0x65, 0x12, 0x07, 0x0a, 0x03, 0x41, 0x4e, 0x59, 0x10, 0x00, 0x12,
-	0x06, 0x0a, 0x02, 0x46, 0x52, 0x10, 0x01, 0x12, 0x06, 0x0a, 0x02, 0x45, 0x4e, 0x10, 0x02, 0x12,
-	0x06, 0x0a, 0x02, 0x45, 0x53, 0x10, 0x03, 0x42, 0x08, 0x5a, 0x06, 0x2e, 0x3b, 0x61, 0x6d, 0x71,
-	0x70, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x49, 0x64, 0x12, 0x1a, 0x0a, 0x08, 0x73, 0x65, 0x72, 0x76, 0x65, 0x72, 0x49, 0x64, 0x18, 0x02,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x73, 0x65, 0x72, 0x76, 0x65, 0x72, 0x49, 0x64, 0x22, 0xa5,
+	0x01, 0x0a, 0x10, 0x4a, 0x6f, 0x62, 0x47, 0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x41, 0x6e, 0x73,
+	0x77, 0x65, 0x72, 0x12, 0x1a, 0x0a, 0x08, 0x73, 0x65, 0x72, 0x76, 0x65, 0x72, 0x49, 0x64, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x73, 0x65, 0x72, 0x76, 0x65, 0x72, 0x49, 0x64, 0x12,
+	0x38, 0x0a, 0x04, 0x6a, 0x6f, 0x62, 0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x24, 0x2e,
+	0x61, 0x6d, 0x71, 0x70, 0x2e, 0x4a, 0x6f, 0x62, 0x47, 0x65, 0x74, 0x55, 0x73, 0x65, 0x72, 0x41,
+	0x6e, 0x73, 0x77, 0x65, 0x72, 0x2e, 0x4a, 0x6f, 0x62, 0x45, 0x78, 0x70, 0x65, 0x72, 0x69, 0x65,
+	0x6e, 0x63, 0x65, 0x52, 0x04, 0x6a, 0x6f, 0x62, 0x73, 0x1a, 0x3b, 0x0a, 0x0d, 0x4a, 0x6f, 0x62,
+	0x45, 0x78, 0x70, 0x65, 0x72, 0x69, 0x65, 0x6e, 0x63, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x6a, 0x6f,
+	0x62, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x6a, 0x6f, 0x62, 0x49, 0x64,
+	0x12, 0x14, 0x0a, 0x05, 0x6c, 0x65, 0x76, 0x65, 0x6c, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52,
+	0x05, 0x6c, 0x65, 0x76, 0x65, 0x6c, 0x22, 0x6f, 0x0a, 0x0d, 0x4a, 0x6f, 0x62, 0x53, 0x65, 0x74,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x16, 0x0a, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49,
+	0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x12,
+	0x14, 0x0a, 0x05, 0x6a, 0x6f, 0x62, 0x49, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05,
+	0x6a, 0x6f, 0x62, 0x49, 0x64, 0x12, 0x1a, 0x0a, 0x08, 0x73, 0x65, 0x72, 0x76, 0x65, 0x72, 0x49,
+	0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x73, 0x65, 0x72, 0x76, 0x65, 0x72, 0x49,
+	0x64, 0x12, 0x14, 0x0a, 0x05, 0x6c, 0x65, 0x76, 0x65, 0x6c, 0x18, 0x04, 0x20, 0x01, 0x28, 0x03,
+	0x52, 0x05, 0x6c, 0x65, 0x76, 0x65, 0x6c, 0x22, 0x0e, 0x0a, 0x0c, 0x4a, 0x6f, 0x62, 0x53, 0x65,
+	0x74, 0x41, 0x6e, 0x73, 0x77, 0x65, 0x72, 0x2a, 0x2b, 0x0a, 0x08, 0x4c, 0x61, 0x6e, 0x67, 0x75,
+	0x61, 0x67, 0x65, 0x12, 0x07, 0x0a, 0x03, 0x41, 0x4e, 0x59, 0x10, 0x00, 0x12, 0x06, 0x0a, 0x02,
+	0x46, 0x52, 0x10, 0x01, 0x12, 0x06, 0x0a, 0x02, 0x45, 0x4e, 0x10, 0x02, 0x12, 0x06, 0x0a, 0x02,
+	0x45, 0x53, 0x10, 0x03, 0x42, 0x08, 0x5a, 0x06, 0x2e, 0x3b, 0x61, 0x6d, 0x71, 0x70, 0x62, 0x06,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -2188,7 +2405,7 @@ func file_rabbitmq_proto_rawDescGZIP() []byte {
 }
 
 var file_rabbitmq_proto_enumTypes = make([]protoimpl.EnumInfo, 6)
-var file_rabbitmq_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
+var file_rabbitmq_proto_msgTypes = make([]protoimpl.MessageInfo, 25)
 var file_rabbitmq_proto_goTypes = []interface{}{
 	(Language)(0),                                                  // 0: amqp.Language
 	(RabbitMQMessage_Type)(0),                                      // 1: amqp.RabbitMQMessage.Type
@@ -2205,20 +2422,23 @@ var file_rabbitmq_proto_goTypes = []interface{}{
 	(*ConfigurationGetAnswer)(nil),                                 // 12: amqp.ConfigurationGetAnswer
 	(*ConfigurationSetRequest)(nil),                                // 13: amqp.ConfigurationSetRequest
 	(*ConfigurationSetAnswer)(nil),                                 // 14: amqp.ConfigurationSetAnswer
-	(*JobGetRequest)(nil),                                          // 15: amqp.JobGetRequest
-	(*JobGetAnswer)(nil),                                           // 16: amqp.JobGetAnswer
-	(*JobSetRequest)(nil),                                          // 17: amqp.JobSetRequest
-	(*JobSetAnswer)(nil),                                           // 18: amqp.JobSetAnswer
-	(*PortalPositionAnswer_PortalPosition)(nil),                    // 19: amqp.PortalPositionAnswer.PortalPosition
-	(*PortalPositionAnswer_PortalPosition_Position)(nil),           // 20: amqp.PortalPositionAnswer.PortalPosition.Position
-	(*PortalPositionAnswer_PortalPosition_Source)(nil),             // 21: amqp.PortalPositionAnswer.PortalPosition.Source
-	(*PortalPositionAnswer_PortalPosition_Position_Transport)(nil), // 22: amqp.PortalPositionAnswer.PortalPosition.Position.Transport
-	(*ConfigurationGetAnswer_ChannelServer)(nil),                   // 23: amqp.ConfigurationGetAnswer.ChannelServer
-	(*ConfigurationGetAnswer_ChannelWebhook)(nil),                  // 24: amqp.ConfigurationGetAnswer.ChannelWebhook
-	(*ConfigurationSetRequest_ServerField)(nil),                    // 25: amqp.ConfigurationSetRequest.ServerField
-	(*ConfigurationSetRequest_WebhookField)(nil),                   // 26: amqp.ConfigurationSetRequest.WebhookField
-	(*JobGetAnswer_Craftsman)(nil),                                 // 27: amqp.JobGetAnswer.Craftsman
-	(*timestamp.Timestamp)(nil),                                    // 28: google.protobuf.Timestamp
+	(*JobGetBookRequest)(nil),                                      // 15: amqp.JobGetBookRequest
+	(*JobGetBookAnswer)(nil),                                       // 16: amqp.JobGetBookAnswer
+	(*JobGetUserRequest)(nil),                                      // 17: amqp.JobGetUserRequest
+	(*JobGetUserAnswer)(nil),                                       // 18: amqp.JobGetUserAnswer
+	(*JobSetRequest)(nil),                                          // 19: amqp.JobSetRequest
+	(*JobSetAnswer)(nil),                                           // 20: amqp.JobSetAnswer
+	(*PortalPositionAnswer_PortalPosition)(nil),                    // 21: amqp.PortalPositionAnswer.PortalPosition
+	(*PortalPositionAnswer_PortalPosition_Position)(nil),           // 22: amqp.PortalPositionAnswer.PortalPosition.Position
+	(*PortalPositionAnswer_PortalPosition_Source)(nil),             // 23: amqp.PortalPositionAnswer.PortalPosition.Source
+	(*PortalPositionAnswer_PortalPosition_Position_Transport)(nil), // 24: amqp.PortalPositionAnswer.PortalPosition.Position.Transport
+	(*ConfigurationGetAnswer_ChannelServer)(nil),                   // 25: amqp.ConfigurationGetAnswer.ChannelServer
+	(*ConfigurationGetAnswer_ChannelWebhook)(nil),                  // 26: amqp.ConfigurationGetAnswer.ChannelWebhook
+	(*ConfigurationSetRequest_ServerField)(nil),                    // 27: amqp.ConfigurationSetRequest.ServerField
+	(*ConfigurationSetRequest_WebhookField)(nil),                   // 28: amqp.ConfigurationSetRequest.WebhookField
+	(*JobGetBookAnswer_Craftsman)(nil),                             // 29: amqp.JobGetBookAnswer.Craftsman
+	(*JobGetUserAnswer_JobExperience)(nil),                         // 30: amqp.JobGetUserAnswer.JobExperience
+	(*timestamp.Timestamp)(nil),                                    // 31: google.protobuf.Timestamp
 }
 var file_rabbitmq_proto_depIdxs = []int32{
 	1,  // 0: amqp.RabbitMQMessage.type:type_name -> amqp.RabbitMQMessage.Type
@@ -2232,32 +2452,35 @@ var file_rabbitmq_proto_depIdxs = []int32{
 	12, // 8: amqp.RabbitMQMessage.configurationGetAnswer:type_name -> amqp.ConfigurationGetAnswer
 	13, // 9: amqp.RabbitMQMessage.configurationSetRequest:type_name -> amqp.ConfigurationSetRequest
 	14, // 10: amqp.RabbitMQMessage.configurationSetAnswer:type_name -> amqp.ConfigurationSetAnswer
-	15, // 11: amqp.RabbitMQMessage.jobGetRequest:type_name -> amqp.JobGetRequest
-	16, // 12: amqp.RabbitMQMessage.jobGetAnswer:type_name -> amqp.JobGetAnswer
-	17, // 13: amqp.RabbitMQMessage.jobSetRequest:type_name -> amqp.JobSetRequest
-	18, // 14: amqp.RabbitMQMessage.jobSetAnswer:type_name -> amqp.JobSetAnswer
-	28, // 15: amqp.NewsRSSMessage.date:type_name -> google.protobuf.Timestamp
-	19, // 16: amqp.PortalPositionAnswer.positions:type_name -> amqp.PortalPositionAnswer.PortalPosition
-	23, // 17: amqp.ConfigurationGetAnswer.channelServers:type_name -> amqp.ConfigurationGetAnswer.ChannelServer
-	24, // 18: amqp.ConfigurationGetAnswer.channelWebhooks:type_name -> amqp.ConfigurationGetAnswer.ChannelWebhook
-	4,  // 19: amqp.ConfigurationSetRequest.field:type_name -> amqp.ConfigurationSetRequest.Field
-	25, // 20: amqp.ConfigurationSetRequest.serverField:type_name -> amqp.ConfigurationSetRequest.ServerField
-	26, // 21: amqp.ConfigurationSetRequest.webhookField:type_name -> amqp.ConfigurationSetRequest.WebhookField
-	27, // 22: amqp.JobGetAnswer.craftsmen:type_name -> amqp.JobGetAnswer.Craftsman
-	20, // 23: amqp.PortalPositionAnswer.PortalPosition.position:type_name -> amqp.PortalPositionAnswer.PortalPosition.Position
-	28, // 24: amqp.PortalPositionAnswer.PortalPosition.createdAt:type_name -> google.protobuf.Timestamp
-	28, // 25: amqp.PortalPositionAnswer.PortalPosition.updatedAt:type_name -> google.protobuf.Timestamp
-	21, // 26: amqp.PortalPositionAnswer.PortalPosition.source:type_name -> amqp.PortalPositionAnswer.PortalPosition.Source
-	22, // 27: amqp.PortalPositionAnswer.PortalPosition.Position.transport:type_name -> amqp.PortalPositionAnswer.PortalPosition.Position.Transport
-	22, // 28: amqp.PortalPositionAnswer.PortalPosition.Position.conditionalTransport:type_name -> amqp.PortalPositionAnswer.PortalPosition.Position.Transport
-	3,  // 29: amqp.ConfigurationGetAnswer.ChannelWebhook.provider:type_name -> amqp.ConfigurationGetAnswer.ChannelWebhook.Provider
-	0,  // 30: amqp.ConfigurationGetAnswer.ChannelWebhook.language:type_name -> amqp.Language
-	5,  // 31: amqp.ConfigurationSetRequest.WebhookField.provider:type_name -> amqp.ConfigurationSetRequest.WebhookField.Provider
-	32, // [32:32] is the sub-list for method output_type
-	32, // [32:32] is the sub-list for method input_type
-	32, // [32:32] is the sub-list for extension type_name
-	32, // [32:32] is the sub-list for extension extendee
-	0,  // [0:32] is the sub-list for field type_name
+	15, // 11: amqp.RabbitMQMessage.jobGetBookRequest:type_name -> amqp.JobGetBookRequest
+	16, // 12: amqp.RabbitMQMessage.jobGetBookAnswer:type_name -> amqp.JobGetBookAnswer
+	17, // 13: amqp.RabbitMQMessage.jobGetUserRequest:type_name -> amqp.JobGetUserRequest
+	18, // 14: amqp.RabbitMQMessage.jobGetUserAnswer:type_name -> amqp.JobGetUserAnswer
+	19, // 15: amqp.RabbitMQMessage.jobSetRequest:type_name -> amqp.JobSetRequest
+	20, // 16: amqp.RabbitMQMessage.jobSetAnswer:type_name -> amqp.JobSetAnswer
+	31, // 17: amqp.NewsRSSMessage.date:type_name -> google.protobuf.Timestamp
+	21, // 18: amqp.PortalPositionAnswer.positions:type_name -> amqp.PortalPositionAnswer.PortalPosition
+	25, // 19: amqp.ConfigurationGetAnswer.channelServers:type_name -> amqp.ConfigurationGetAnswer.ChannelServer
+	26, // 20: amqp.ConfigurationGetAnswer.channelWebhooks:type_name -> amqp.ConfigurationGetAnswer.ChannelWebhook
+	4,  // 21: amqp.ConfigurationSetRequest.field:type_name -> amqp.ConfigurationSetRequest.Field
+	27, // 22: amqp.ConfigurationSetRequest.serverField:type_name -> amqp.ConfigurationSetRequest.ServerField
+	28, // 23: amqp.ConfigurationSetRequest.webhookField:type_name -> amqp.ConfigurationSetRequest.WebhookField
+	29, // 24: amqp.JobGetBookAnswer.craftsmen:type_name -> amqp.JobGetBookAnswer.Craftsman
+	30, // 25: amqp.JobGetUserAnswer.jobs:type_name -> amqp.JobGetUserAnswer.JobExperience
+	22, // 26: amqp.PortalPositionAnswer.PortalPosition.position:type_name -> amqp.PortalPositionAnswer.PortalPosition.Position
+	31, // 27: amqp.PortalPositionAnswer.PortalPosition.createdAt:type_name -> google.protobuf.Timestamp
+	31, // 28: amqp.PortalPositionAnswer.PortalPosition.updatedAt:type_name -> google.protobuf.Timestamp
+	23, // 29: amqp.PortalPositionAnswer.PortalPosition.source:type_name -> amqp.PortalPositionAnswer.PortalPosition.Source
+	24, // 30: amqp.PortalPositionAnswer.PortalPosition.Position.transport:type_name -> amqp.PortalPositionAnswer.PortalPosition.Position.Transport
+	24, // 31: amqp.PortalPositionAnswer.PortalPosition.Position.conditionalTransport:type_name -> amqp.PortalPositionAnswer.PortalPosition.Position.Transport
+	3,  // 32: amqp.ConfigurationGetAnswer.ChannelWebhook.provider:type_name -> amqp.ConfigurationGetAnswer.ChannelWebhook.Provider
+	0,  // 33: amqp.ConfigurationGetAnswer.ChannelWebhook.language:type_name -> amqp.Language
+	5,  // 34: amqp.ConfigurationSetRequest.WebhookField.provider:type_name -> amqp.ConfigurationSetRequest.WebhookField.Provider
+	35, // [35:35] is the sub-list for method output_type
+	35, // [35:35] is the sub-list for method input_type
+	35, // [35:35] is the sub-list for extension type_name
+	35, // [35:35] is the sub-list for extension extendee
+	0,  // [0:35] is the sub-list for field type_name
 }
 
 func init() { file_rabbitmq_proto_init() }
@@ -2375,7 +2598,7 @@ func file_rabbitmq_proto_init() {
 			}
 		}
 		file_rabbitmq_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*JobGetRequest); i {
+			switch v := v.(*JobGetBookRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2387,7 +2610,7 @@ func file_rabbitmq_proto_init() {
 			}
 		}
 		file_rabbitmq_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*JobGetAnswer); i {
+			switch v := v.(*JobGetBookAnswer); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2399,7 +2622,7 @@ func file_rabbitmq_proto_init() {
 			}
 		}
 		file_rabbitmq_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*JobSetRequest); i {
+			switch v := v.(*JobGetUserRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2411,7 +2634,7 @@ func file_rabbitmq_proto_init() {
 			}
 		}
 		file_rabbitmq_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*JobSetAnswer); i {
+			switch v := v.(*JobGetUserAnswer); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2423,7 +2646,7 @@ func file_rabbitmq_proto_init() {
 			}
 		}
 		file_rabbitmq_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PortalPositionAnswer_PortalPosition); i {
+			switch v := v.(*JobSetRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2435,7 +2658,7 @@ func file_rabbitmq_proto_init() {
 			}
 		}
 		file_rabbitmq_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PortalPositionAnswer_PortalPosition_Position); i {
+			switch v := v.(*JobSetAnswer); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2447,7 +2670,7 @@ func file_rabbitmq_proto_init() {
 			}
 		}
 		file_rabbitmq_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PortalPositionAnswer_PortalPosition_Source); i {
+			switch v := v.(*PortalPositionAnswer_PortalPosition); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2459,7 +2682,7 @@ func file_rabbitmq_proto_init() {
 			}
 		}
 		file_rabbitmq_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*PortalPositionAnswer_PortalPosition_Position_Transport); i {
+			switch v := v.(*PortalPositionAnswer_PortalPosition_Position); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2471,7 +2694,7 @@ func file_rabbitmq_proto_init() {
 			}
 		}
 		file_rabbitmq_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ConfigurationGetAnswer_ChannelServer); i {
+			switch v := v.(*PortalPositionAnswer_PortalPosition_Source); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2483,7 +2706,7 @@ func file_rabbitmq_proto_init() {
 			}
 		}
 		file_rabbitmq_proto_msgTypes[18].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ConfigurationGetAnswer_ChannelWebhook); i {
+			switch v := v.(*PortalPositionAnswer_PortalPosition_Position_Transport); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2495,7 +2718,7 @@ func file_rabbitmq_proto_init() {
 			}
 		}
 		file_rabbitmq_proto_msgTypes[19].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ConfigurationSetRequest_ServerField); i {
+			switch v := v.(*ConfigurationGetAnswer_ChannelServer); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2507,7 +2730,7 @@ func file_rabbitmq_proto_init() {
 			}
 		}
 		file_rabbitmq_proto_msgTypes[20].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ConfigurationSetRequest_WebhookField); i {
+			switch v := v.(*ConfigurationGetAnswer_ChannelWebhook); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2519,7 +2742,43 @@ func file_rabbitmq_proto_init() {
 			}
 		}
 		file_rabbitmq_proto_msgTypes[21].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*JobGetAnswer_Craftsman); i {
+			switch v := v.(*ConfigurationSetRequest_ServerField); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_rabbitmq_proto_msgTypes[22].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ConfigurationSetRequest_WebhookField); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_rabbitmq_proto_msgTypes[23].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*JobGetBookAnswer_Craftsman); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_rabbitmq_proto_msgTypes[24].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*JobGetUserAnswer_JobExperience); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2537,7 +2796,7 @@ func file_rabbitmq_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_rabbitmq_proto_rawDesc,
 			NumEnums:      6,
-			NumMessages:   22,
+			NumMessages:   25,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

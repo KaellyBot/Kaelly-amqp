@@ -20,10 +20,12 @@ message RabbitMQMessage
     ConfigurationGetAnswer   configurationGetAnswer  = 15;
     ConfigurationSetRequest  configurationSetRequest = 16;
     ConfigurationSetAnswer   configurationSetAnswer  = 17;
-    JobGetRequest            jobGetRequest           = 18;
-    JobGetAnswer             jobGetAnswer            = 19;
-    JobSetRequest            jobSetRequest           = 20;
-    JobSetAnswer             jobSetAnswer            = 21;
+    JobGetBookRequest        jobGetBookRequest       = 18;
+    JobGetBookAnswer         jobGetBookAnswer        = 19;
+    JobGetUserRequest        jobGetUserRequest       = 20;
+    JobGetUserAnswer         jobGetUserAnswer        = 21;
+    JobSetRequest            jobSetRequest           = 22;
+    JobSetAnswer             jobSetAnswer            = 23;
 
     enum Type
     {
@@ -36,10 +38,12 @@ message RabbitMQMessage
         CONFIGURATION_GET_ANSWER  =  6;
         CONFIGURATION_SET_REQUEST =  7;
         CONFIGURATION_SET_ANSWER  =  8;
-        JOB_GET_REQUEST           =  9;
-        JOB_GET_ANSWER            = 10;
-        JOB_SET_REQUEST           = 11;
-        JOB_SET_ANSWER            = 12;
+        JOB_GET_BOOK_REQUEST      =  9;
+        JOB_GET_BOOK_ANSWER       = 10;
+        JOB_GET_USER_REQUEST      = 11;
+        JOB_GET_USER_ANSWER       = 12;
+        JOB_SET_REQUEST           = 13;
+        JOB_SET_ANSWER            = 14;
     }
 
     enum Status 
@@ -192,7 +196,7 @@ message ConfigurationSetAnswer
 {
 }
 
-message JobGetRequest
+message JobGetBookRequest
 {
     repeated string userIds  = 1;
     string          jobId    = 2;
@@ -200,7 +204,7 @@ message JobGetRequest
     int64           limit    = 4;
 }
 
-message JobGetAnswer
+message JobGetBookAnswer
 {
     string             jobId     = 1;
     string             serverId  = 2;
@@ -210,6 +214,24 @@ message JobGetAnswer
     {
         string userId = 1;
         int64  level  = 2;
+    }
+}
+
+message JobGetUserRequest
+{
+    string userId   = 1;
+    string serverId = 2;
+}
+
+message JobGetUserAnswer
+{
+    string                 serverId  = 1;
+    repeated JobExperience jobs      = 2;
+    
+    message JobExperience
+    {
+        string jobId = 1;
+        int64  level = 2;
     }
 }
 
