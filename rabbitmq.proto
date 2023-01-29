@@ -275,8 +275,10 @@ message AlignGetBookAnswer
     
     message Believer
     {
-        string userId = 1;
-        int64  level  = 2;
+        string cityId  = 1;
+        string orderId = 2;
+        string userId  = 3;
+        int64  level   = 4;
     }
 }
 
