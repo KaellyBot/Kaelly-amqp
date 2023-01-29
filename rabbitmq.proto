@@ -26,6 +26,12 @@ message RabbitMQMessage
     JobGetUserAnswer         jobGetUserAnswer        = 21;
     JobSetRequest            jobSetRequest           = 22;
     JobSetAnswer             jobSetAnswer            = 23;
+    AlignGetBookRequest      alignGetBookRequest     = 24;
+    AlignGetBookAnswer       alignGetBookAnswer      = 25;
+    AlignGetUserRequest      alignGetUserRequest     = 26;
+    AlignGetUserAnswer       alignGetUserAnswer      = 27;
+    AlignSetRequest          alignSetRequest         = 28;
+    AlignSetAnswer           alignSetAnswer          = 29;
 
     enum Type
     {
@@ -44,6 +50,12 @@ message RabbitMQMessage
         JOB_GET_USER_ANSWER       = 12;
         JOB_SET_REQUEST           = 13;
         JOB_SET_ANSWER            = 14;
+        ALIGN_GET_BOOK_REQUEST    = 15;
+        ALIGN_GET_BOOK_ANSWER     = 16;
+        ALIGN_GET_USER_REQUEST    = 17;
+        ALIGN_GET_USER_ANSWER     = 18;
+        ALIGN_SET_REQUEST         = 19;
+        ALIGN_SET_ANSWER          = 20;
     }
 
     enum Status 
@@ -244,5 +256,58 @@ message JobSetRequest
 }
 
 message JobSetAnswer
+{
+}
+
+message AlignGetBookRequest
+{
+    repeated string userIds  = 1;
+    string          cityId   = 2;
+    string          orderId  = 3;
+    string          serverId = 4;
+    int64           limit    = 5;
+}
+
+message AlignGetBookAnswer
+{
+    string            serverId  = 1;
+    repeated Believer believers = 2;
+    
+    message Believer
+    {
+        string userId = 1;
+        int64  level  = 2;
+    }
+}
+
+message AlignGetUserRequest
+{
+    string userId   = 1;
+    string serverId = 2;
+}
+
+message AlignGetUserAnswer
+{
+    string                   serverId = 1;
+    repeated AlignExperience beliefs  = 2;
+    
+    message AlignExperience
+    {
+        string cityId  = 1;
+        string orderId = 2;
+        int64  level   = 3;
+    }
+}
+
+message AlignSetRequest
+{
+    string userId   = 1;
+    string cityId   = 2;
+    string orderId  = 3;
+    string serverId = 4;
+    int64  level    = 5;
+}
+
+message AlignSetAnswer
 {
 }
