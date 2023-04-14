@@ -75,13 +75,8 @@ enum Language
 
 message NewsTwitterMessage
 {
-    string title         = 1;
-    string authorName    = 2;
-    string authorUrl     = 3;
-    string authorIconUrl = 4;
-    string url           = 5;
-    string iconUrl       = 6;
-    string content       = 7;
+    string url                     = 1;
+    google.protobuf.Timestamp date = 2;
 }
 
 message NewsRSSMessage
@@ -91,6 +86,13 @@ message NewsRSSMessage
     string                    url        = 3;
     string                    iconUrl    = 4;
     google.protobuf.Timestamp date       = 5;
+    Type                      type       = 6;
+
+    enum Type {
+        CHANGELOG = 0;
+        DEVBLOG   = 1;
+        NEWS      = 2;
+    }
 }
 
 message PortalPositionRequest
