@@ -86,13 +86,7 @@ message NewsRSSMessage
     string                    url        = 3;
     string                    iconUrl    = 4;
     google.protobuf.Timestamp date       = 5;
-    Type                      type       = 6;
-
-    enum Type {
-        CHANGELOG = 0;
-        DEVBLOG   = 1;
-        NEWS      = 2;
-    }
+    string                    type       = 6;
 }
 
 message PortalPositionRequest
