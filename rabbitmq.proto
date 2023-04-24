@@ -42,27 +42,30 @@ message RabbitMQMessage
 
     enum Type
     {
-        UNKNOWN                   =  0;
-        NEWS_RSS                  =  1;
-        NEWS_TWITTER              =  2;
-        PORTAL_POSITION_REQUEST   =  3;
-        PORTAL_POSITION_ANSWER    =  4;
-        CONFIGURATION_GET_REQUEST =  5;
-        CONFIGURATION_GET_ANSWER  =  6;
-        CONFIGURATION_SET_REQUEST =  7;
-        CONFIGURATION_SET_ANSWER  =  8;
-        JOB_GET_BOOK_REQUEST      =  9;
-        JOB_GET_BOOK_ANSWER       = 10;
-        JOB_GET_USER_REQUEST      = 11;
-        JOB_GET_USER_ANSWER       = 12;
-        JOB_SET_REQUEST           = 13;
-        JOB_SET_ANSWER            = 14;
-        ALIGN_GET_BOOK_REQUEST    = 15;
-        ALIGN_GET_BOOK_ANSWER     = 16;
-        ALIGN_GET_USER_REQUEST    = 17;
-        ALIGN_GET_USER_ANSWER     = 18;
-        ALIGN_SET_REQUEST         = 19;
-        ALIGN_SET_ANSWER          = 20;
+        UNKNOWN                                   =   0;
+        NEWS_RSS                                  = 100;
+        NEWS_TWITTER                              = 101;
+        PORTAL_POSITION_REQUEST                   = 200;
+        PORTAL_POSITION_ANSWER                    = 201;
+        CONFIGURATION_GET_REQUEST                 = 300;
+        CONFIGURATION_GET_ANSWER                  = 301;
+        CONFIGURATION_SET_SERVER_REQUEST          = 302;
+        CONFIGURATION_SET_ALMANAX_WEBHOOK_REQUEST = 303;
+        CONFIGURATION_SET_RSS_WEBHOOK_REQUEST     = 304;
+        CONFIGURATION_SET_TWITTER_WEBHOOK_REQUEST = 305;
+        CONFIGURATION_SET_ANSWER                  = 306;
+        JOB_GET_BOOK_REQUEST                      = 400;
+        JOB_GET_BOOK_ANSWER                       = 401;
+        JOB_GET_USER_REQUEST                      = 402;
+        JOB_GET_USER_ANSWER                       = 403;
+        JOB_SET_REQUEST                           = 404;
+        JOB_SET_ANSWER                            = 405;
+        ALIGN_GET_BOOK_REQUEST                    = 500;
+        ALIGN_GET_BOOK_ANSWER                     = 501;
+        ALIGN_GET_USER_REQUEST                    = 502;
+        ALIGN_GET_USER_ANSWER                     = 503;
+        ALIGN_SET_REQUEST                         = 504;
+        ALIGN_SET_ANSWER                          = 505;
     }
 
     enum Status 
