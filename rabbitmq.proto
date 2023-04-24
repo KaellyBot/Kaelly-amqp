@@ -12,26 +12,33 @@ message RabbitMQMessage
     Language language = 2;
     Status   status   = 3;
     
-    NewsTwitterMessage       newsTwitterMessage      = 10;
-    NewsRSSMessage           newsRSSMessage          = 11;
-    PortalPositionRequest    portalPositionRequest   = 12;
-    PortalPositionAnswer     portalPositionAnswer    = 13;
-    ConfigurationGetRequest  configurationGetRequest = 14;
-    ConfigurationGetAnswer   configurationGetAnswer  = 15;
-    ConfigurationSetRequest  configurationSetRequest = 16;
-    ConfigurationSetAnswer   configurationSetAnswer  = 17;
-    JobGetBookRequest        jobGetBookRequest       = 18;
-    JobGetBookAnswer         jobGetBookAnswer        = 19;
-    JobGetUserRequest        jobGetUserRequest       = 20;
-    JobGetUserAnswer         jobGetUserAnswer        = 21;
-    JobSetRequest            jobSetRequest           = 22;
-    JobSetAnswer             jobSetAnswer            = 23;
-    AlignGetBookRequest      alignGetBookRequest     = 24;
-    AlignGetBookAnswer       alignGetBookAnswer      = 25;
-    AlignGetUserRequest      alignGetUserRequest     = 26;
-    AlignGetUserAnswer       alignGetUserAnswer      = 27;
-    AlignSetRequest          alignSetRequest         = 28;
-    AlignSetAnswer           alignSetAnswer          = 29;
+    NewsTwitterMessage                     newsTwitterMessage                    = 100;
+    NewsRSSMessage                         newsRSSMessage                        = 101;
+ 
+    PortalPositionRequest                  portalPositionRequest                 = 200;
+    PortalPositionAnswer                   portalPositionAnswer                  = 201;
+
+    ConfigurationGetRequest                configurationGetRequest               = 300;
+    ConfigurationGetAnswer                 configurationGetAnswer                = 301;
+    ConfigurationSetServerRequest          configurationSetServerWebhookRequest  = 302;
+    ConfigurationSetAlmanaxWebhookRequest  configurationSetAlmanaxWebhookRequest = 303;
+    ConfigurationSetRssWebhookRequest      configurationSetRssWebhookRequest     = 304;
+    ConfigurationSetTwitterWebhookRequest  configurationSetTwitterWebhookRequest = 305;
+    ConfigurationSetAnswer                 configurationSetAnswer                = 306;
+
+    JobGetBookRequest                      jobGetBookRequest                     = 400;
+    JobGetBookAnswer                       jobGetBookAnswer                      = 401;
+    JobGetUserRequest                      jobGetUserRequest                     = 402;
+    JobGetUserAnswer                       jobGetUserAnswer                      = 403;
+    JobSetRequest                          jobSetRequest                         = 404;
+    JobSetAnswer                           jobSetAnswer                          = 405;
+
+    AlignGetBookRequest                    alignGetBookRequest                   = 500;
+    AlignGetBookAnswer                     alignGetBookAnswer                    = 501;
+    AlignGetUserRequest                    alignGetUserRequest                   = 502;
+    AlignGetUserAnswer                     alignGetUserAnswer                    = 503;
+    AlignSetRequest                        alignSetRequest                       = 504;
+    AlignSetAnswer                         alignSetAnswer                        = 505;
 
     enum Type
     {
@@ -144,60 +151,68 @@ message ConfigurationGetAnswer
     string                  guildId         = 1;
     string                  serverId        = 2;
     repeated ChannelServer  channelServers  = 3;
-    repeated ChannelWebhook channelWebhooks = 4;
+    repeated AlmanaxWebhook almanaxWebhooks = 4;
+    repeated RssWebhook     rssWebhooks     = 5;
+    repeated TwitterWebhook twitterWebhooks = 6;
 
     message ChannelServer {
         string channelId = 1;
         string serverId  = 2;
     }
 
-    message ChannelWebhook {
+    message AlmanaxWebhook {
         string   channelId = 1;
-        Provider provider  = 2;
-        Language language  = 3;
+        Language language  = 2;
+    }
 
-        enum Provider 
-        {
-            ALMANAX = 0;
-            RSS     = 1;
-            TWITTER = 2;
-        }
+    message RssWebhook {
+        string   channelId = 1;
+        string   feedId    = 2;
+        Language language  = 3;
+    }
+
+    message TwitterWebhook {
+        string   channelId = 1;
+        Language language  = 2;
     }
 }
 
-message ConfigurationSetRequest
+message ConfigurationSetServerRequest
 {
     string       guildId      = 1;
     string       channelId    = 2;
-    Field        field        = 3;
-    ServerField  serverField  = 4;
-    WebhookField webhookField = 5;
+    string       serverId     = 3;
+}
 
-    message ServerField 
-    {
-        string serverId  = 1;
-    }
+message ConfigurationSetAlmanaxWebhookRequest
+{
+    string   guildId      = 1;
+    string   channelId    = 2;
+    string   webhookId    = 3;
+    string   webhookToken = 4;
+    bool     enabled      = 5;
+    Language language     = 6;
+}
 
-    message WebhookField 
-    {
-        string   webhookId    = 1;
-        string   webhookToken = 2;
-        bool     enabled      = 3;
-        Provider provider     = 4;
-    
-        enum Provider 
-        {
-            ALMANAX = 0;
-            RSS     = 1;
-            TWITTER = 2;
-        }
-    }
+message ConfigurationSetRssWebhookRequest
+{
+    string   guildId      = 1;
+    string   channelId    = 2;
+    string   feedId       = 3;
+    string   webhookId    = 4;
+    string   webhookToken = 5;
+    bool     enabled      = 6;
+    Language language     = 7;
+}
 
-    enum Field 
-    {
-        SERVER  = 0;
-        WEBHOOK = 1;
-    }
+message ConfigurationSetTwitterWebhookRequest
+{
+    string   guildId      = 1;
+    string   channelId    = 2;
+    string   webhookId    = 3;
+    string   webhookToken = 4;
+    bool     enabled      = 5;
+    Language language     = 6;
 }
 
 message ConfigurationSetAnswer
