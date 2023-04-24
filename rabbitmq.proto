@@ -20,7 +20,7 @@ message RabbitMQMessage
 
     ConfigurationGetRequest                configurationGetRequest               = 300;
     ConfigurationGetAnswer                 configurationGetAnswer                = 301;
-    ConfigurationSetServerRequest          configurationSetServerWebhookRequest  = 302;
+    ConfigurationSetServerRequest          configurationSetServerRequest         = 302;
     ConfigurationSetAlmanaxWebhookRequest  configurationSetAlmanaxWebhookRequest = 303;
     ConfigurationSetRssWebhookRequest      configurationSetRssWebhookRequest     = 304;
     ConfigurationSetTwitterWebhookRequest  configurationSetTwitterWebhookRequest = 305;
