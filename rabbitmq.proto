@@ -165,19 +165,22 @@ message ConfigurationGetAnswer
 
     message AlmanaxWebhook {
         string   channelId = 1;
-        Language language  = 2;
+        string   webhookId = 2;
+        Language language  = 3;
     }
 
     message RssWebhook {
         string   channelId = 1;
         string   feedId    = 2;
-        Language language  = 3;
+        string   webhookId = 3;
+        Language language  = 4;
     }
 
     message TwitterWebhook {
         string   channelId = 1;
         string   name      = 2;
-        Language language  = 3;
+        string   webhookId = 3;
+        Language language  = 4;
     }
 }
 
