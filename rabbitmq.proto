@@ -176,7 +176,8 @@ message ConfigurationGetAnswer
 
     message TwitterWebhook {
         string   channelId = 1;
-        Language language  = 2;
+        string   name      = 2;
+        Language language  = 3;
     }
 }
 
