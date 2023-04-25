@@ -224,6 +224,7 @@ message ConfigurationSetTwitterWebhookRequest
 
 message ConfigurationSetAnswer
 {
+    string webhookId = 1;
 }
 
 message JobGetBookRequest
