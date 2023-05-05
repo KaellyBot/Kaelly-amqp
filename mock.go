@@ -4,23 +4,23 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-type MessageBrokerMock struct {
-	PublishFunc     func(msg *RabbitMQMessage, exchange Exchange, routingKey, correlationId string) error
+type Mock struct {
+	PublishFunc     func(msg *RabbitMQMessage, exchange Exchange, routingKey, correlationID string) error
 	ConsumeFunc     func(queueName, routingKey string, consumer MessageConsumer) error
 	IsConnectedFunc func() bool
 	ShutdownFunc    func()
 }
 
-func (mock *MessageBrokerMock) Publish(msg *RabbitMQMessage, exchange Exchange, routingKey, correlationId string) error {
+func (mock *Mock) Publish(msg *RabbitMQMessage, exchange Exchange, routingKey, correlationID string) error {
 	if mock.PublishFunc != nil {
-		return mock.PublishFunc(msg, exchange, routingKey, correlationId)
+		return mock.PublishFunc(msg, exchange, routingKey, correlationID)
 	}
 
 	log.Warn().Msgf("No mock provided for Publish function")
 	return nil
 }
 
-func (mock *MessageBrokerMock) Consume(queueName, routingKey string, consumer MessageConsumer) error {
+func (mock *Mock) Consume(queueName, routingKey string, consumer MessageConsumer) error {
 	if mock.ConsumeFunc != nil {
 		return mock.ConsumeFunc(queueName, routingKey, consumer)
 	}
@@ -29,7 +29,7 @@ func (mock *MessageBrokerMock) Consume(queueName, routingKey string, consumer Me
 	return nil
 }
 
-func (mock *MessageBrokerMock) IsConnected() bool {
+func (mock *Mock) IsConnected() bool {
 	if mock.IsConnectedFunc != nil {
 		return mock.IsConnectedFunc()
 	}
@@ -38,7 +38,7 @@ func (mock *MessageBrokerMock) IsConnected() bool {
 	return false
 }
 
-func (mock *MessageBrokerMock) Shutdown() {
+func (mock *Mock) Shutdown() {
 	if mock.ShutdownFunc != nil {
 		mock.ShutdownFunc()
 		return

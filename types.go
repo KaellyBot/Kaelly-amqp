@@ -9,35 +9,37 @@ import (
 )
 
 const (
-	ExchangeRequest Exchange = "requests"
-	ExchangeAnswer           = "answers"
-	ExchangeNews             = "news"
+	ContextCorrelationID ContextKey = "correlationID"
 
-	ContextCorrelationId = "correlationId"
+	ExchangeRequest Exchange = "requests"
+	ExchangeAnswer  Exchange = "answers"
+	ExchangeNews    Exchange = "news"
 )
 
 var (
-	ErrCannotBeConnected = errors.New("Cannot be connected, please check AMQP server or address")
-	ErrMustBeConnected   = errors.New("This function requires to be connected to AMQP server")
+	ErrCannotBeConnected = errors.New("cannot be connected, please check AMQP server or address")
+	ErrMustBeConnected   = errors.New("this function requires to be connected to AMQP server")
 )
+
+type ContextKey string
 
 type Exchange string
 
-type MessageConsumer func(ctx context.Context, message *RabbitMQMessage, correlationId string)
+type MessageConsumer func(ctx context.Context, message *RabbitMQMessage, correlationID string)
 
-type MessageBrokerInterface interface {
-	Publish(msg *RabbitMQMessage, exchange Exchange, routingKey, correlationId string) error
-	Consume(queueName, routingKey string, consumer MessageConsumer) error
+type MessageBroker interface {
+	Publish(msg *RabbitMQMessage, exchange Exchange, routingKey, correlationID string) error
+	Consume(queueName string, consumer MessageConsumer) error
 	IsConnected() bool
 	Shutdown()
 }
 
-type MessageBroker struct {
+type Impl struct {
 	connection       *amqp091.Connection
 	publisherChannel *amqp091.Channel
 	consumerChannel  *amqp091.Channel
 	mutex            *sync.Mutex
-	clientId         string
+	clientID         string
 	address          string
 	bindings         []Binding
 	isConnected      bool
