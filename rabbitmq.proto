@@ -81,6 +81,7 @@ enum Language
     FR  = 1;
     EN  = 2;
     ES  = 3;
+    DE  = 4;
 }
 
 message NewsTwitterMessage
