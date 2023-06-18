@@ -309,16 +309,22 @@ message EncyclopediaSetRequest
 
 message EncyclopediaSetAnswer        
 {
-    string             ankamaId   = 1;
+    string             id         = 1;
     string             name       = 2;
     int64              level      = 3;
     repeated Equipment equipments = 4;
-    repeated Effect    effects    = 5;
+    repeated Bonus     bonuses    = 5;
 
     message Equipment 
     {
-        string ankamaId = 1;
-        string name     = 2;
+        string id   = 1;
+        string name = 2;
+    }
+
+    message Bonus
+    {
+        int64 itemNumber        = 1;
+        repeated Effect effects = 2;
     }
 
     message Effect
