@@ -309,7 +309,23 @@ message EncyclopediaSetRequest
 
 message EncyclopediaSetAnswer        
 {
-    // TODO
+    string             ankamaId   = 1;
+    string             name       = 2;
+    int64              level      = 3;
+    repeated Equipment equipments = 4;
+    repeated Effect    effects    = 5;
+
+    message Equipment 
+    {
+        string ankamaId = 1;
+        string name     = 2;
+    }
+
+    message Effect
+    {
+        string ankamaId = 1;
+        string label    = 2;
+    }
 }
 
 message JobGetBookRequest
