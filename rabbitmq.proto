@@ -314,6 +314,7 @@ message EncyclopediaSetAnswer
     int64              level      = 3;
     repeated Equipment equipments = 4;
     repeated Bonus     bonuses    = 5;
+    Source             source     = 6;
 
     message Equipment 
     {
@@ -323,14 +324,21 @@ message EncyclopediaSetAnswer
 
     message Bonus
     {
-        int64 itemNumber        = 1;
-        repeated Effect effects = 2;
+        int64           itemNumber = 1;
+        repeated Effect effects    = 2;
     }
 
     message Effect
     {
-        string ankamaId = 1;
-        string label    = 2;
+        string id    = 1;
+        string label = 2;
+    }
+    
+    message Source
+    {
+        string name = 1;
+        string icon = 2;
+        string url  = 3;
     }
 }
 
