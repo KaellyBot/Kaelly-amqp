@@ -361,9 +361,10 @@ message EncyclopediaSetAnswer
 
     message Equipment 
     {
-        string        id   = 1;
-        string        name = 2;
-        EquipmentType type = 3;
+        string        id    = 1;
+        string        name  = 2;
+        EquipmentType type  = 3;
+        int64         level = 4;
     }
 
     message Bonus
