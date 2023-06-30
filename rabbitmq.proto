@@ -122,6 +122,7 @@ enum EquipmentType
     WEAPON = 6;
     PET    = 7;
     DOFUS  = 8;
+    SHIELD = 9;
 }
 
 message Source
