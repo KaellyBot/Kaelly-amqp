@@ -111,6 +111,26 @@ enum Language
     DE  = 4;
 }
 
+enum EquipmentType
+{
+    HAT    = 0;
+    CLOAK  = 1;
+    AMULET = 2;
+    RING   = 3;
+    BELT   = 4;
+    BOOT   = 5;
+    WEAPON = 6;
+    PET    = 7;
+    DOFUS  = 8;
+}
+
+message Source
+{
+    string name = 1;
+    string icon = 2;
+    string url  = 3;
+}
+
 message AlignGetBookRequest
 {
     repeated string userIds  = 1;
@@ -283,7 +303,29 @@ message EncyclopediaItemRequest
 
 message EncyclopediaItemAnswer       
 {
-    // TODO
+    string             id            =  1;
+    string             name          =  2;
+    string             description   =  3;
+    string             labelType     =  4;
+    int64              level         =  5;
+    int64              pods          =  6;
+    EquipmentType      equipmentType =  7;
+    Set                set           =  8;
+    repeated Effect    effects       =  9;
+    Source             source        = 10;
+    // TODO Damage, Recipe, conditions, Misc (two hands, ap cost, etc)
+
+    message Effect
+    {
+        string id    = 1;
+        string label = 2;
+    }
+
+    message Set
+    {
+        string id   = 1;
+        string name = 2;
+    }
 }
 
 message EncyclopediaSetListRequest   
@@ -318,8 +360,9 @@ message EncyclopediaSetAnswer
 
     message Equipment 
     {
-        string id   = 1;
-        string name = 2;
+        string        id   = 1;
+        string        name = 2;
+        EquipmentType type = 3;
     }
 
     message Bonus
@@ -332,13 +375,6 @@ message EncyclopediaSetAnswer
     {
         string id    = 1;
         string label = 2;
-    }
-    
-    message Source
-    {
-        string name = 1;
-        string icon = 2;
-        string url  = 3;
     }
 }
 
@@ -444,12 +480,6 @@ message PortalPositionAnswer
                 int32 x          = 4;
                 int32 y          = 5;
             }
-        }
-
-        message Source {
-            string name = 1;
-            string icon = 2;
-            string url  = 3;
         }
     }
 }
