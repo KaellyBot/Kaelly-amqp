@@ -113,16 +113,17 @@ enum Language
 
 enum EquipmentType
 {
-    HAT    = 0;
-    CLOAK  = 1;
-    AMULET = 2;
-    RING   = 3;
-    BELT   = 4;
-    BOOT   = 5;
-    WEAPON = 6;
-    PET    = 7;
-    DOFUS  = 8;
-    SHIELD = 9;
+    NONE   = 0;
+    HAT    = 1;
+    CLOAK  = 2;
+    AMULET = 3;
+    RING   = 4;
+    BELT   = 5;
+    BOOT   = 6;
+    WEAPON = 7;
+    SHIELD = 8;
+    PET    = 9;
+    DOFUS  = 10;
 }
 
 message Source
