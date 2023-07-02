@@ -301,6 +301,7 @@ message EncyclopediaItemListAnswer
 message EncyclopediaItemRequest
 {
     string query = 1;
+    bool   isID  = 2;
 }
 
 message EncyclopediaItemAnswer       
@@ -349,6 +350,7 @@ message EncyclopediaSetListAnswer
 message EncyclopediaSetRequest       
 {
     string query = 1;
+    bool   isID  = 2;
 }
 
 message EncyclopediaSetAnswer        
