@@ -306,17 +306,19 @@ message EncyclopediaItemRequest
 
 message EncyclopediaItemAnswer       
 {
-    string             id            =  1;
-    string             name          =  2;
-    string             description   =  3;
-    string             labelType     =  4;
-    int64              level         =  5;
-    int64              pods          =  6;
-    EquipmentType      equipmentType =  7;
-    Set                set           =  8;
-    repeated Effect    effects       =  9;
-    Source             source        = 10;
-    // TODO Damage, Recipe, conditions, Misc (two hands, ap cost, etc)
+    string          id            =  1;
+    string          name          =  2;
+    string          description   =  3;
+    string          labelType     =  4;
+    string          icon          =  5;
+    int64           level         =  6;
+    int64           pods          =  7;
+    EquipmentType   equipmentType =  8;
+    Set             set           =  9;
+    repeated Effect effects       = 10;
+    Recipe          recipe        = 11;
+    Source          source        = 12;
+    // TODO Damage, conditions, Misc (two hands, ap cost, etc)
 
     message Effect
     {
@@ -328,6 +330,18 @@ message EncyclopediaItemAnswer
     {
         string id   = 1;
         string name = 2;
+    }
+
+    message Recipe
+    {
+        repeated Ingredient ingredients = 1;
+    }
+
+    message Ingredient
+    {
+        string id       = 1;
+        string name     = 2;
+        int64  quantity = 3;
     }
 }
 
