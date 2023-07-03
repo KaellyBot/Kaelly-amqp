@@ -322,8 +322,9 @@ message EncyclopediaItemAnswer
 
     message Effect
     {
-        string id    = 1;
-        string label = 2;
+        string id       = 1;
+        string label    = 2;
+        bool   isActive = 3;
     }
 
     message Set
@@ -392,8 +393,9 @@ message EncyclopediaSetAnswer
 
     message Effect
     {
-        string id    = 1;
-        string label = 2;
+        string id       = 1;
+        string label    = 2;
+        bool   isActive = 3;
     }
 }
 
