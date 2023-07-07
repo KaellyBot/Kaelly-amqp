@@ -33,10 +33,6 @@ message RabbitMQMessage
     EncyclopediaItemListAnswer             encyclopediaItemListAnswer            = 303;
     EncyclopediaItemRequest                encyclopediaItemRequest               = 304;
     EncyclopediaItemAnswer                 encyclopediaItemAnswer                = 305;
-    EncyclopediaSetListRequest             encyclopediaSetListRequest            = 306;
-    EncyclopediaSetListAnswer              encyclopediaSetListAnswer             = 307;
-    EncyclopediaSetRequest                 encyclopediaSetRequest                = 308;
-    EncyclopediaSetAnswer                  encyclopediaSetAnswer                 = 309;
 
     JobGetBookRequest                      jobGetBookRequest                     = 400;
     JobGetBookAnswer                       jobGetBookAnswer                      = 401;
@@ -76,10 +72,6 @@ message RabbitMQMessage
         ENCYCLOPEDIA_ITEM_LIST_ANSWER             = 303;
         ENCYCLOPEDIA_ITEM_REQUEST                 = 304;
         ENCYCLOPEDIA_ITEM_ANSWER                  = 305;
-        ENCYCLOPEDIA_SET_LIST_REQUEST             = 306;
-        ENCYCLOPEDIA_SET_LIST_ANSWER              = 307;
-        ENCYCLOPEDIA_SET_REQUEST                  = 308;
-        ENCYCLOPEDIA_SET_ANSWER                   = 309;
 
         JOB_GET_BOOK_REQUEST                      = 400;
         JOB_GET_BOOK_ANSWER                       = 401;
@@ -124,6 +116,18 @@ enum EquipmentType
     SHIELD = 8;
     PET    = 9;
     DOFUS  = 10;
+}
+
+enum ItemType
+{
+    ANY_ITEM   = 0;
+    CONSUMABLE = 1;
+    COSMETIC   = 2;
+    EQUIPMENT  = 3;
+    MOUNT      = 4;
+    QUEST_ITEM = 5;
+    RESOURCE   = 6;
+    SET        = 7;
 }
 
 message Source
@@ -285,6 +289,13 @@ message EncyclopediaAlmanaxAnswer
 message EncyclopediaItemListRequest  
 {
     string query = 1;
+    Type   type  = 2;
+
+    enum Type
+    {
+        ANY = 0;
+        SET = 1;
+    }
 }
 
 message EncyclopediaItemListAnswer
@@ -292,7 +303,7 @@ message EncyclopediaItemListAnswer
     repeated Item items = 1;
 
     message Item
-    {    
+    {
         string id   = 1;
         string name = 2;
     }
@@ -300,102 +311,111 @@ message EncyclopediaItemListAnswer
 
 message EncyclopediaItemRequest
 {
-    string query = 1;
-    bool   isID  = 2;
+    string   query = 1;
+    bool     isID  = 2;
+    ItemType type  = 3;
 }
 
 message EncyclopediaItemAnswer       
 {
-    string          id            =  1;
-    string          name          =  2;
-    string          description   =  3;
-    string          labelType     =  4;
-    string          icon          =  5;
-    int64           level         =  6;
-    int64           pods          =  7;
-    EquipmentType   equipmentType =  8;
-    Set             set           =  9;
-    repeated Effect effects       = 10;
-    Recipe          recipe        = 11;
-    Source          source        = 12;
-    // TODO Damage, conditions, Misc (two hands, ap cost, etc)
+    ItemType   type       = 1;
+    Consumable consumable = 2;
+    Cosmetic   cosmetic   = 3;
+    Equipment  equipment  = 4;
+    Mount      mount      = 5;
+    QuestItem  questItem  = 6;
+    Resource   resource   = 7;
+    Set        set        = 8;
+    Source     source     = 9;
+
+    message Consumable 
+    {
+        // TODO
+    }
+
+    message Cosmetic   
+    {
+        // TODO
+    }
+
+    message Equipment
+    {
+        string          id            =  1;
+        string          name          =  2;
+        string          description   =  3;
+        string          labelType     =  4;
+        string          icon          =  5;
+        int64           level         =  6;
+        int64           pods          =  7;
+        EquipmentType   equipmentType =  8;
+        Set             set           =  9;
+        repeated Effect effects       = 10;
+        Recipe          recipe        = 11;
+        // TODO Damage, conditions, Misc (two hands, ap cost, etc)
+
+        message Set
+        {
+            string id   = 1;
+            string name = 2;
+        }
+    }
+
+    message Mount      
+    {
+        // TODO
+    }
+
+    message QuestItem 
+    {
+        // TODO
+    }
+
+    message Resource   
+    {
+        // TODO
+    }
+
+    message Set        
+    {
+        string             id         = 1;
+        string             name       = 2;
+        int64              level      = 3;
+        repeated Equipment equipments = 4;
+        repeated Bonus     bonuses    = 5;
+
+        message Equipment 
+        {
+            string        id    = 1;
+            string        name  = 2;
+            EquipmentType type  = 3;
+            int64         level = 4;
+        }
+
+        message Bonus
+        {
+            int64           itemNumber = 1;
+            repeated Effect effects    = 2;
+        }
+    }
 
     message Effect
     {
         string id       = 1;
         string label    = 2;
         bool   isActive = 3;
-    }
-
-    message Set
-    {
-        string id   = 1;
-        string name = 2;
     }
 
     message Recipe
     {
         repeated Ingredient ingredients = 1;
-    }
 
-    message Ingredient
-    {
-        string id       = 1;
-        string name     = 2;
-        int64  quantity = 3;
-    }
-}
-
-message EncyclopediaSetListRequest   
-{
-    string query = 1;
-}
-
-message EncyclopediaSetListAnswer    
-{
-    repeated Set sets = 1;
-
-    message Set 
-    {    
-        string id   = 1;
-        string name = 2;
-    }
-}
-
-message EncyclopediaSetRequest       
-{
-    string query = 1;
-    bool   isID  = 2;
-}
-
-message EncyclopediaSetAnswer        
-{
-    string             id         = 1;
-    string             name       = 2;
-    int64              level      = 3;
-    repeated Equipment equipments = 4;
-    repeated Bonus     bonuses    = 5;
-    Source             source     = 6;
-
-    message Equipment 
-    {
-        string        id    = 1;
-        string        name  = 2;
-        EquipmentType type  = 3;
-        int64         level = 4;
-    }
-
-    message Bonus
-    {
-        int64           itemNumber = 1;
-        repeated Effect effects    = 2;
-    }
-
-    message Effect
-    {
-        string id       = 1;
-        string label    = 2;
-        bool   isActive = 3;
+        message Ingredient
+        {
+            string   id       = 1;
+            string   name     = 2;
+            int64    quantity = 3;
+            ItemType type     = 4;
+        }
     }
 }
 
