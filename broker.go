@@ -2,6 +2,7 @@ package amqp
 
 import (
 	"context"
+	"fmt"
 	"sync"
 
 	"github.com/rabbitmq/amqp091-go"
@@ -96,8 +97,12 @@ func (broker *Impl) declareBindings() error {
 	return nil
 }
 
+func (broker *Impl) getConsumerTag(queue string) string {
+	return fmt.Sprintf("%s.%s", broker.clientID, queue)
+}
+
 func (broker *Impl) getIdentifiedQueue(queue string) string {
-	return broker.clientID + queue
+	return fmt.Sprintf("%s.%s", broker.clientID, queue)
 }
 
 func (broker *Impl) handleAMQPConnection() {
@@ -160,7 +165,7 @@ func (broker *Impl) Consume(queueName string, consumer MessageConsumer) error {
 
 	delivery, err := broker.consumerChannel.Consume(
 		broker.getIdentifiedQueue(queueName), // queue
-		broker.clientID,                      // consumer
+		broker.getConsumerTag(queueName),     // consumer
 		true,                                 // auto ack
 		false,                                // exclusive
 		false,                                // no local
