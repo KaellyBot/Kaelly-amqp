@@ -29,10 +29,14 @@ message RabbitMQMessage
 
     EncyclopediaAlmanaxRequest             encyclopediaAlmanaxRequest            = 300;
     EncyclopediaAlmanaxAnswer              encyclopediaAlmanaxAnswer             = 301;
-    EncyclopediaItemListRequest            encyclopediaItemListRequest           = 302;
-    EncyclopediaItemListAnswer             encyclopediaItemListAnswer            = 303;
-    EncyclopediaItemRequest                encyclopediaItemRequest               = 304;
-    EncyclopediaItemAnswer                 encyclopediaItemAnswer                = 305;
+    EncyclopediaAlmanaxResourceRequest     encyclopediaAlmanaxResourceRequest    = 302;
+    EncyclopediaAlmanaxResourceAnswer      encyclopediaAlmanaxResourceAnswer     = 303;
+    EncyclopediaAlmanaxEffectRequest       encyclopediaAlmanaxEffectRequest      = 304;
+    EncyclopediaAlmanaxEffectAnswer        encyclopediaAlmanaxEffectAnswer       = 305;
+    EncyclopediaListRequest                encyclopediaListRequest               = 306;
+    EncyclopediaListAnswer                 encyclopediaListAnswer                = 307;
+    EncyclopediaItemRequest                encyclopediaItemRequest               = 308;
+    EncyclopediaItemAnswer                 encyclopediaItemAnswer                = 309;
 
     JobGetBookRequest                      jobGetBookRequest                     = 400;
     JobGetBookAnswer                       jobGetBookAnswer                      = 401;
@@ -68,10 +72,14 @@ message RabbitMQMessage
 
         ENCYCLOPEDIA_ALMANAX_REQUEST              = 300;
         ENCYCLOPEDIA_ALMANAX_ANSWER               = 301;
-        ENCYCLOPEDIA_ITEM_LIST_REQUEST            = 302;
-        ENCYCLOPEDIA_ITEM_LIST_ANSWER             = 303;
-        ENCYCLOPEDIA_ITEM_REQUEST                 = 304;
-        ENCYCLOPEDIA_ITEM_ANSWER                  = 305;
+        ENCYCLOPEDIA_ALMANAX_RESOURCE_REQUEST     = 302;
+        ENCYCLOPEDIA_ALMANAX_RESOURCE_ANSWER      = 303;
+        ENCYCLOPEDIA_ALMANAX_EFFECT_REQUEST       = 304;
+        ENCYCLOPEDIA_ALMANAX_EFFECT_ANSWER        = 305;
+        ENCYCLOPEDIA_LIST_REQUEST                 = 306;
+        ENCYCLOPEDIA_LIST_ANSWER                  = 307;
+        ENCYCLOPEDIA_ITEM_REQUEST                 = 308;
+        ENCYCLOPEDIA_ITEM_ANSWER                  = 309;
 
         JOB_GET_BOOK_REQUEST                      = 400;
         JOB_GET_BOOK_ANSWER                       = 401;
@@ -128,6 +136,26 @@ enum ItemType
     QUEST_ITEM = 5;
     RESOURCE   = 6;
     SET        = 7;
+}
+
+message Almanax
+{
+    string                    bonus    = 1;
+    Tribute                   tribute  = 2;
+    google.protobuf.Timestamp date     = 3;
+    Source                    source   = 4;
+
+    message Tribute
+    {
+        Item  item     = 1;
+        int32 quantity = 2;
+
+        message Item
+        {
+            string name = 1;
+            string icon = 2;
+        }
+    }
 }
 
 message Source
@@ -276,29 +304,64 @@ message ConfigurationSetAnswer
     bool   removeWebhook = 2;
 }
 
-message EncyclopediaAlmanaxRequest   
+message EncyclopediaAlmanaxRequest
 {
-    // TODO
+    google.protobuf.Timestamp date = 1;
 }
 
-message EncyclopediaAlmanaxAnswer    
+message EncyclopediaAlmanaxAnswer
 {
-    // TODO
+    Almanax almanax = 1;
 }
 
-message EncyclopediaItemListRequest  
+message EncyclopediaAlmanaxResourceRequest
+{
+    int32 duration = 1;
+}
+
+message EncyclopediaAlmanaxResourceAnswer
+{
+    repeated Tribute tributes = 1;
+    int32            duration = 2;
+
+    message Tribute
+    {
+        Item  item     = 1;
+        int32 quantity = 2;
+
+        message Item
+        {
+            string name = 1;
+            string icon = 2;
+        }
+    }
+}
+
+message EncyclopediaAlmanaxEffectRequest
+{
+    string query = 1;
+}
+
+message EncyclopediaAlmanaxEffectAnswer
+{
+    Almanax almanax = 1;
+}
+
+message EncyclopediaListRequest
 {
     string query = 1;
     Type   type  = 2;
 
     enum Type
     {
-        ANY = 0;
-        SET = 1;
+        UNKNOWN        = 0;
+        ITEM           = 1;
+        SET            = 2;
+        ALMANAX_EFFECT = 3;
     }
 }
 
-message EncyclopediaItemListAnswer
+message EncyclopediaListAnswer
 {
     repeated Item items = 1;
 
@@ -316,7 +379,7 @@ message EncyclopediaItemRequest
     ItemType type  = 3;
 }
 
-message EncyclopediaItemAnswer       
+message EncyclopediaItemAnswer
 {
     ItemType   type       = 1;
     Consumable consumable = 2;
