@@ -323,17 +323,12 @@ message EncyclopediaAlmanaxResourceAnswer
 {
     repeated Tribute tributes = 1;
     int32            duration = 2;
+    Source           source   = 3;
 
     message Tribute
     {
-        Item  item     = 1;
-        int32 quantity = 2;
-
-        message Item
-        {
-            string name = 1;
-            string icon = 2;
-        }
+        string itemName = 1;
+        int32  quantity = 2;
     }
 }
 
