@@ -235,6 +235,7 @@ message ConfigurationGetAnswer
     repeated AlmanaxWebhook almanaxWebhooks = 4;
     repeated RssWebhook     rssWebhooks     = 5;
     repeated TwitterWebhook twitterWebhooks = 6;
+    repeated YoutubeWebhook youtubeWebhooks = 7;
 
     message ChannelServer {
         string channelId = 1;
@@ -259,6 +260,12 @@ message ConfigurationGetAnswer
         string   name      = 2;
         string   webhookId = 3;
         Language language  = 4;
+    }
+
+    message YoutubeWebhook {
+        string channelId = 1;
+        string videastId = 2;
+        string webhookId = 3;
     }
 }
 
