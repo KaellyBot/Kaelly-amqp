@@ -25,7 +25,8 @@ message RabbitMQMessage
     ConfigurationSetAlmanaxWebhookRequest  configurationSetAlmanaxWebhookRequest = 203;
     ConfigurationSetRssWebhookRequest      configurationSetRssWebhookRequest     = 204;
     ConfigurationSetTwitterWebhookRequest  configurationSetTwitterWebhookRequest = 205;
-    ConfigurationSetAnswer                 configurationSetAnswer                = 206;
+    ConfigurationSetYoutubeWebhookRequest  configurationSetYoutubeWebhookRequest = 206;
+    ConfigurationSetAnswer                 configurationSetAnswer                = 250;
 
     EncyclopediaAlmanaxRequest             encyclopediaAlmanaxRequest            = 300;
     EncyclopediaAlmanaxAnswer              encyclopediaAlmanaxAnswer             = 301;
@@ -68,7 +69,8 @@ message RabbitMQMessage
         CONFIGURATION_SET_ALMANAX_WEBHOOK_REQUEST = 203;
         CONFIGURATION_SET_RSS_WEBHOOK_REQUEST     = 204;
         CONFIGURATION_SET_TWITTER_WEBHOOK_REQUEST = 205;
-        CONFIGURATION_SET_ANSWER                  = 206;
+        CONFIGURATION_SET_YOUTUBE_WEBHOOK_REQUEST = 206;
+        CONFIGURATION_SET_ANSWER                  = 250;
 
         ENCYCLOPEDIA_ALMANAX_REQUEST              = 300;
         ENCYCLOPEDIA_ALMANAX_ANSWER               = 301;
@@ -296,6 +298,16 @@ message ConfigurationSetTwitterWebhookRequest
     string   webhookToken = 4;
     bool     enabled      = 5;
     Language language     = 6;
+}
+
+message ConfigurationSetYoutubeWebhookRequest
+{
+    string   guildId      = 1;
+    string   channelId    = 2;
+    string   videastId    = 3;
+    string   webhookId    = 4;
+    string   webhookToken = 5;
+    bool     enabled      = 6;
 }
 
 message ConfigurationSetAnswer
