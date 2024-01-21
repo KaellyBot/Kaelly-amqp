@@ -24,8 +24,9 @@ message RabbitMQMessage
     ConfigurationSetServerRequest          configurationSetServerRequest         = 202;
     ConfigurationSetAlmanaxWebhookRequest  configurationSetAlmanaxWebhookRequest = 203;
     ConfigurationSetRssWebhookRequest      configurationSetRssWebhookRequest     = 204;
-    ConfigurationSetTwitterWebhookRequest  configurationSetTwitterWebhookRequest = 205;
-    ConfigurationSetYoutubeWebhookRequest  configurationSetYoutubeWebhookRequest = 206;
+    ConfigurationSetTwitchWebhookRequest   configurationSetTwitchWebhookRequest  = 205;
+    ConfigurationSetTwitterWebhookRequest  configurationSetTwitterWebhookRequest = 206;
+    ConfigurationSetYoutubeWebhookRequest  configurationSetYoutubeWebhookRequest = 207;
     ConfigurationSetAnswer                 configurationSetAnswer                = 250;
 
     EncyclopediaAlmanaxRequest             encyclopediaAlmanaxRequest            = 300;
@@ -68,8 +69,9 @@ message RabbitMQMessage
         CONFIGURATION_SET_SERVER_REQUEST          = 202;
         CONFIGURATION_SET_ALMANAX_WEBHOOK_REQUEST = 203;
         CONFIGURATION_SET_RSS_WEBHOOK_REQUEST     = 204;
-        CONFIGURATION_SET_TWITTER_WEBHOOK_REQUEST = 205;
-        CONFIGURATION_SET_YOUTUBE_WEBHOOK_REQUEST = 206;
+        CONFIGURATION_SET_TWITCH_WEBHOOK_REQUEST  = 205;
+        CONFIGURATION_SET_TWITTER_WEBHOOK_REQUEST = 206;
+        CONFIGURATION_SET_YOUTUBE_WEBHOOK_REQUEST = 207;
         CONFIGURATION_SET_ANSWER                  = 250;
 
         ENCYCLOPEDIA_ALMANAX_REQUEST              = 300;
@@ -234,8 +236,9 @@ message ConfigurationGetAnswer
     repeated ChannelServer  channelServers  = 3;
     repeated AlmanaxWebhook almanaxWebhooks = 4;
     repeated RssWebhook     rssWebhooks     = 5;
-    repeated TwitterWebhook twitterWebhooks = 6;
-    repeated YoutubeWebhook youtubeWebhooks = 7;
+    repeated TwitchWebhook  twitchWebhooks  = 6;
+    repeated TwitterWebhook twitterWebhooks = 7;
+    repeated YoutubeWebhook youtubeWebhooks = 8;
 
     message ChannelServer {
         string channelId = 1;
@@ -253,6 +256,12 @@ message ConfigurationGetAnswer
         string   feedId    = 2;
         string   webhookId = 3;
         Language language  = 4;
+    }
+
+    message TwitchWebhook {
+        string channelId  = 1;
+        string streamerId = 2;
+        string webhookId  = 3;
     }
 
     message TwitterWebhook {
@@ -295,6 +304,16 @@ message ConfigurationSetRssWebhookRequest
     string   webhookToken = 5;
     bool     enabled      = 6;
     Language language     = 7;
+}
+
+message ConfigurationSetTwitchWebhookRequest
+{
+    string   guildId      = 1;
+    string   channelId    = 2;
+    string   streamerId   = 3;
+    string   webhookId    = 4;
+    string   webhookToken = 5;
+    bool     enabled      = 6;
 }
 
 message ConfigurationSetTwitterWebhookRequest
