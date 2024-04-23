@@ -146,8 +146,9 @@ message Almanax
 {
     string                    bonus    = 1;
     Tribute                   tribute  = 2;
-    google.protobuf.Timestamp date     = 3;
-    Source                    source   = 4;
+    int64                     reward   = 3;
+    google.protobuf.Timestamp date     = 4;
+    Source                    source   = 5;
 
     message Tribute
     {
