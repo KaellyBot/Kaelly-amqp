@@ -415,6 +415,7 @@ message EncyclopediaItemRequest
 {
     string   query = 1;
     bool     isID  = 2;
+    ItemType type  = 3;
 }
 
 message EncyclopediaItemAnswer
