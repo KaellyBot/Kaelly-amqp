@@ -147,6 +147,15 @@ enum ItemType
     SET        = 2;
 }
 
+enum IngredientType
+{
+    ANY_INGREDIENT       = 0;
+    CONSUMABLE           = 1;
+    EQUIPMENT_INGREDIENT = 2;
+    QUEST_ITEM           = 3;
+    RESOURCE             = 4;
+}
+
 message Almanax
 {
     string                    bonus    = 1;
@@ -483,10 +492,10 @@ message EncyclopediaItemAnswer
 
         message Ingredient
         {
-            string   id       = 1;
-            string   name     = 2;
-            int64    quantity = 3;
-            ItemType type     = 4;
+            string         id       = 1;
+            string         name     = 2;
+            int64          quantity = 3;
+            IngredientType type     = 4;
         }
     }
 }
