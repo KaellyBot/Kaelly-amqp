@@ -11,6 +11,7 @@ message RabbitMQMessage
     Type     type     = 1;
     Language language = 2;
     Status   status   = 3;
+    Game     game     = 4;
 
     AlignGetBookRequest                    alignGetBookRequest                   = 100;
     AlignGetBookAnswer                     alignGetBookAnswer                    = 101;
@@ -106,6 +107,14 @@ message RabbitMQMessage
     }
 }
 
+enum Game
+{
+    ANY_GAME    = 0;
+    DOFUS_GAME  = 1;
+    DOFUS_TOUCH = 2;
+    DOFUS_RETRO = 3;
+}
+
 enum Language 
 {
     ANY = 0;
@@ -127,19 +136,15 @@ enum EquipmentType
     WEAPON = 7;
     SHIELD = 8;
     PET    = 9;
-    DOFUS  = 10;
+    MOUNT  = 10;
+    DOFUS  = 11;
 }
 
 enum ItemType
 {
     ANY_ITEM   = 0;
-    CONSUMABLE = 1;
-    COSMETIC   = 2;
-    EQUIPMENT  = 3;
-    MOUNT      = 4;
-    QUEST_ITEM = 5;
-    RESOURCE   = 6;
-    SET        = 7;
+    EQUIPMENT  = 1;
+    SET        = 2;
 }
 
 message Almanax
@@ -410,30 +415,14 @@ message EncyclopediaItemRequest
 {
     string   query = 1;
     bool     isID  = 2;
-    ItemType type  = 3;
 }
 
 message EncyclopediaItemAnswer
 {
     ItemType   type       = 1;
-    Consumable consumable = 2;
-    Cosmetic   cosmetic   = 3;
-    Equipment  equipment  = 4;
-    Mount      mount      = 5;
-    QuestItem  questItem  = 6;
-    Resource   resource   = 7;
-    Set        set        = 8;
-    Source     source     = 9;
-
-    message Consumable 
-    {
-        // TODO
-    }
-
-    message Cosmetic   
-    {
-        // TODO
-    }
+    Equipment  equipment  = 2;
+    Set        set        = 3;
+    Source     source     = 4;
 
     message Equipment
     {
@@ -455,21 +444,6 @@ message EncyclopediaItemAnswer
             string id   = 1;
             string name = 2;
         }
-    }
-
-    message Mount      
-    {
-        // TODO
-    }
-
-    message QuestItem 
-    {
-        // TODO
-    }
-
-    message Resource   
-    {
-        // TODO
     }
 
     message Set        
