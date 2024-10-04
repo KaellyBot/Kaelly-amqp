@@ -19,40 +19,43 @@ message RabbitMQMessage
     AlignGetUserAnswer                     alignGetUserAnswer                    = 103;
     AlignSetRequest                        alignSetRequest                       = 104;
     AlignSetAnswer                         alignSetAnswer                        = 105;
+
+    CompetitionMapRequest                  competitionMapRequest                 = 200;
+    CompetitionMapAnswer                   competitionMapAnswer                  = 201;
     
-    ConfigurationGetRequest                configurationGetRequest               = 200;
-    ConfigurationGetAnswer                 configurationGetAnswer                = 201;
-    ConfigurationSetServerRequest          configurationSetServerRequest         = 202;
-    ConfigurationSetAlmanaxWebhookRequest  configurationSetAlmanaxWebhookRequest = 203;
-    ConfigurationSetRssWebhookRequest      configurationSetRssWebhookRequest     = 204;
-    ConfigurationSetTwitchWebhookRequest   configurationSetTwitchWebhookRequest  = 205;
-    ConfigurationSetTwitterWebhookRequest  configurationSetTwitterWebhookRequest = 206;
-    ConfigurationSetYoutubeWebhookRequest  configurationSetYoutubeWebhookRequest = 207;
-    ConfigurationSetAnswer                 configurationSetAnswer                = 250;
+    ConfigurationGetRequest                configurationGetRequest               = 300;
+    ConfigurationGetAnswer                 configurationGetAnswer                = 301;
+    ConfigurationSetServerRequest          configurationSetServerRequest         = 302;
+    ConfigurationSetAlmanaxWebhookRequest  configurationSetAlmanaxWebhookRequest = 303;
+    ConfigurationSetRssWebhookRequest      configurationSetRssWebhookRequest     = 304;
+    ConfigurationSetTwitchWebhookRequest   configurationSetTwitchWebhookRequest  = 305;
+    ConfigurationSetTwitterWebhookRequest  configurationSetTwitterWebhookRequest = 306;
+    ConfigurationSetYoutubeWebhookRequest  configurationSetYoutubeWebhookRequest = 307;
+    ConfigurationSetAnswer                 configurationSetAnswer                = 350;
 
-    EncyclopediaAlmanaxRequest             encyclopediaAlmanaxRequest            = 300;
-    EncyclopediaAlmanaxAnswer              encyclopediaAlmanaxAnswer             = 301;
-    EncyclopediaAlmanaxResourceRequest     encyclopediaAlmanaxResourceRequest    = 302;
-    EncyclopediaAlmanaxResourceAnswer      encyclopediaAlmanaxResourceAnswer     = 303;
-    EncyclopediaAlmanaxEffectRequest       encyclopediaAlmanaxEffectRequest      = 304;
-    EncyclopediaAlmanaxEffectAnswer        encyclopediaAlmanaxEffectAnswer       = 305;
-    EncyclopediaListRequest                encyclopediaListRequest               = 306;
-    EncyclopediaListAnswer                 encyclopediaListAnswer                = 307;
-    EncyclopediaItemRequest                encyclopediaItemRequest               = 308;
-    EncyclopediaItemAnswer                 encyclopediaItemAnswer                = 309;
+    EncyclopediaAlmanaxRequest             encyclopediaAlmanaxRequest            = 400;
+    EncyclopediaAlmanaxAnswer              encyclopediaAlmanaxAnswer             = 401;
+    EncyclopediaAlmanaxResourceRequest     encyclopediaAlmanaxResourceRequest    = 402;
+    EncyclopediaAlmanaxResourceAnswer      encyclopediaAlmanaxResourceAnswer     = 403;
+    EncyclopediaAlmanaxEffectRequest       encyclopediaAlmanaxEffectRequest      = 404;
+    EncyclopediaAlmanaxEffectAnswer        encyclopediaAlmanaxEffectAnswer       = 405;
+    EncyclopediaListRequest                encyclopediaListRequest               = 406;
+    EncyclopediaListAnswer                 encyclopediaListAnswer                = 407;
+    EncyclopediaItemRequest                encyclopediaItemRequest               = 408;
+    EncyclopediaItemAnswer                 encyclopediaItemAnswer                = 409;
 
-    JobGetBookRequest                      jobGetBookRequest                     = 400;
-    JobGetBookAnswer                       jobGetBookAnswer                      = 401;
-    JobGetUserRequest                      jobGetUserRequest                     = 402;
-    JobGetUserAnswer                       jobGetUserAnswer                      = 403;
-    JobSetRequest                          jobSetRequest                         = 404;
-    JobSetAnswer                           jobSetAnswer                          = 405;
+    JobGetBookRequest                      jobGetBookRequest                     = 500;
+    JobGetBookAnswer                       jobGetBookAnswer                      = 501;
+    JobGetUserRequest                      jobGetUserRequest                     = 502;
+    JobGetUserAnswer                       jobGetUserAnswer                      = 503;
+    JobSetRequest                          jobSetRequest                         = 504;
+    JobSetAnswer                           jobSetAnswer                          = 505;
 
-    NewsTwitterMessage                     newsTwitterMessage                    = 500;
-    NewsRSSMessage                         newsRSSMessage                        = 501;
+    NewsTwitterMessage                     newsTwitterMessage                    = 600;
+    NewsRSSMessage                         newsRSSMessage                        = 601;
  
-    PortalPositionRequest                  portalPositionRequest                 = 600;
-    PortalPositionAnswer                   portalPositionAnswer                  = 601;
+    PortalPositionRequest                  portalPositionRequest                 = 700;
+    PortalPositionAnswer                   portalPositionAnswer                  = 701;
 
     enum Type
     {
@@ -65,39 +68,42 @@ message RabbitMQMessage
         ALIGN_SET_REQUEST                         = 104;
         ALIGN_SET_ANSWER                          = 105;
 
-        CONFIGURATION_GET_REQUEST                 = 200;
-        CONFIGURATION_GET_ANSWER                  = 201;
-        CONFIGURATION_SET_SERVER_REQUEST          = 202;
-        CONFIGURATION_SET_ALMANAX_WEBHOOK_REQUEST = 203;
-        CONFIGURATION_SET_RSS_WEBHOOK_REQUEST     = 204;
-        CONFIGURATION_SET_TWITCH_WEBHOOK_REQUEST  = 205;
-        CONFIGURATION_SET_TWITTER_WEBHOOK_REQUEST = 206;
-        CONFIGURATION_SET_YOUTUBE_WEBHOOK_REQUEST = 207;
-        CONFIGURATION_SET_ANSWER                  = 250;
+        COMPETITION_MAP_REQUEST                   = 200;
+        COMPETITION_MAP_ANSWER                    = 201;
 
-        ENCYCLOPEDIA_ALMANAX_REQUEST              = 300;
-        ENCYCLOPEDIA_ALMANAX_ANSWER               = 301;
-        ENCYCLOPEDIA_ALMANAX_RESOURCE_REQUEST     = 302;
-        ENCYCLOPEDIA_ALMANAX_RESOURCE_ANSWER      = 303;
-        ENCYCLOPEDIA_ALMANAX_EFFECT_REQUEST       = 304;
-        ENCYCLOPEDIA_ALMANAX_EFFECT_ANSWER        = 305;
-        ENCYCLOPEDIA_LIST_REQUEST                 = 306;
-        ENCYCLOPEDIA_LIST_ANSWER                  = 307;
-        ENCYCLOPEDIA_ITEM_REQUEST                 = 308;
-        ENCYCLOPEDIA_ITEM_ANSWER                  = 309;
+        CONFIGURATION_GET_REQUEST                 = 300;
+        CONFIGURATION_GET_ANSWER                  = 301;
+        CONFIGURATION_SET_SERVER_REQUEST          = 302;
+        CONFIGURATION_SET_ALMANAX_WEBHOOK_REQUEST = 303;
+        CONFIGURATION_SET_RSS_WEBHOOK_REQUEST     = 304;
+        CONFIGURATION_SET_TWITCH_WEBHOOK_REQUEST  = 305;
+        CONFIGURATION_SET_TWITTER_WEBHOOK_REQUEST = 306;
+        CONFIGURATION_SET_YOUTUBE_WEBHOOK_REQUEST = 307;
+        CONFIGURATION_SET_ANSWER                  = 350;
 
-        JOB_GET_BOOK_REQUEST                      = 400;
-        JOB_GET_BOOK_ANSWER                       = 401;
-        JOB_GET_USER_REQUEST                      = 402;
-        JOB_GET_USER_ANSWER                       = 403;
-        JOB_SET_REQUEST                           = 404;
-        JOB_SET_ANSWER                            = 405;
+        ENCYCLOPEDIA_ALMANAX_REQUEST              = 400;
+        ENCYCLOPEDIA_ALMANAX_ANSWER               = 401;
+        ENCYCLOPEDIA_ALMANAX_RESOURCE_REQUEST     = 402;
+        ENCYCLOPEDIA_ALMANAX_RESOURCE_ANSWER      = 403;
+        ENCYCLOPEDIA_ALMANAX_EFFECT_REQUEST       = 404;
+        ENCYCLOPEDIA_ALMANAX_EFFECT_ANSWER        = 405;
+        ENCYCLOPEDIA_LIST_REQUEST                 = 406;
+        ENCYCLOPEDIA_LIST_ANSWER                  = 407;
+        ENCYCLOPEDIA_ITEM_REQUEST                 = 408;
+        ENCYCLOPEDIA_ITEM_ANSWER                  = 409;
 
-        NEWS_RSS                                  = 500;
-        NEWS_TWITTER                              = 501;
+        JOB_GET_BOOK_REQUEST                      = 500;
+        JOB_GET_BOOK_ANSWER                       = 501;
+        JOB_GET_USER_REQUEST                      = 502;
+        JOB_GET_USER_ANSWER                       = 503;
+        JOB_SET_REQUEST                           = 504;
+        JOB_SET_ANSWER                            = 505;
 
-        PORTAL_POSITION_REQUEST                   = 600;
-        PORTAL_POSITION_ANSWER                    = 601;
+        NEWS_RSS                                  = 600;
+        NEWS_TWITTER                              = 601;
+
+        PORTAL_POSITION_REQUEST                   = 700;
+        PORTAL_POSITION_ANSWER                    = 701;
     }
 
     enum Status 
@@ -237,6 +243,21 @@ message AlignSetRequest
 
 message AlignSetAnswer
 {
+}
+
+message CompetitionMapRequest
+{
+    // 0    = random
+    // 1-50 = selected map
+    int64 mapNumber = 1;
+}
+
+message CompetitionMapAnswer
+{
+    int64  mapNumber    = 1;
+    string mapNormalURL = 2;
+    string mapTacticURL = 3;
+    Source source       = 4;
 }
 
 message ConfigurationGetRequest
