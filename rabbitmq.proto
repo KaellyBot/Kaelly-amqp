@@ -254,10 +254,10 @@ message CompetitionMapRequest
 
 message CompetitionMapAnswer
 {
-    int64  mapNumber    = 1;
-    string mapNormalURL = 2;
-    string mapTacticURL = 3;
-    Source source       = 4;
+    int64  mapNumber      = 1;
+    string mapNormalURL   = 2;
+    string mapTacticalURL = 3;
+    Source source         = 4;
 }
 
 message ConfigurationGetRequest
