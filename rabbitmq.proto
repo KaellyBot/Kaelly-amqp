@@ -150,7 +150,8 @@ enum ItemType
 {
     ANY_ITEM   = 0;
     EQUIPMENT  = 1;
-    SET        = 2;
+    MOUNT_TYPE = 2;
+    SET        = 3;
 }
 
 enum IngredientType
