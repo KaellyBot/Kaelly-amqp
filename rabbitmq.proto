@@ -61,49 +61,53 @@ message RabbitMQMessage
     {
         UNKNOWN                                   =   0;
 
-        ALIGN_GET_BOOK_REQUEST                    = 100;
-        ALIGN_GET_BOOK_ANSWER                     = 101;
-        ALIGN_GET_USER_REQUEST                    = 102;
-        ALIGN_GET_USER_ANSWER                     = 103;
-        ALIGN_SET_REQUEST                         = 104;
-        ALIGN_SET_ANSWER                          = 105;
+        ABOUT_REQUEST                             = 100;
 
-        COMPETITION_MAP_REQUEST                   = 200;
-        COMPETITION_MAP_ANSWER                    = 201;
+        ALIGN_GET_BOOK_REQUEST                    = 200;
+        ALIGN_GET_BOOK_ANSWER                     = 201;
+        ALIGN_GET_USER_REQUEST                    = 202;
+        ALIGN_GET_USER_ANSWER                     = 203;
+        ALIGN_SET_REQUEST                         = 204;
+        ALIGN_SET_ANSWER                          = 205;
 
-        CONFIGURATION_GET_REQUEST                 = 300;
-        CONFIGURATION_GET_ANSWER                  = 301;
-        CONFIGURATION_SET_SERVER_REQUEST          = 302;
-        CONFIGURATION_SET_ALMANAX_WEBHOOK_REQUEST = 303;
-        CONFIGURATION_SET_RSS_WEBHOOK_REQUEST     = 304;
-        CONFIGURATION_SET_TWITCH_WEBHOOK_REQUEST  = 305;
-        CONFIGURATION_SET_TWITTER_WEBHOOK_REQUEST = 306;
-        CONFIGURATION_SET_YOUTUBE_WEBHOOK_REQUEST = 307;
-        CONFIGURATION_SET_ANSWER                  = 350;
+        COMPETITION_MAP_REQUEST                   = 300;
+        COMPETITION_MAP_ANSWER                    = 301;
 
-        ENCYCLOPEDIA_ALMANAX_REQUEST              = 400;
-        ENCYCLOPEDIA_ALMANAX_ANSWER               = 401;
-        ENCYCLOPEDIA_ALMANAX_RESOURCE_REQUEST     = 402;
-        ENCYCLOPEDIA_ALMANAX_RESOURCE_ANSWER      = 403;
-        ENCYCLOPEDIA_ALMANAX_EFFECT_REQUEST       = 404;
-        ENCYCLOPEDIA_ALMANAX_EFFECT_ANSWER        = 405;
-        ENCYCLOPEDIA_LIST_REQUEST                 = 406;
-        ENCYCLOPEDIA_LIST_ANSWER                  = 407;
-        ENCYCLOPEDIA_ITEM_REQUEST                 = 408;
-        ENCYCLOPEDIA_ITEM_ANSWER                  = 409;
+        CONFIGURATION_GET_REQUEST                 = 400;
+        CONFIGURATION_GET_ANSWER                  = 401;
+        CONFIGURATION_SET_SERVER_REQUEST          = 402;
+        CONFIGURATION_SET_ALMANAX_WEBHOOK_REQUEST = 403;
+        CONFIGURATION_SET_RSS_WEBHOOK_REQUEST     = 404;
+        CONFIGURATION_SET_TWITCH_WEBHOOK_REQUEST  = 405;
+        CONFIGURATION_SET_TWITTER_WEBHOOK_REQUEST = 406;
+        CONFIGURATION_SET_YOUTUBE_WEBHOOK_REQUEST = 407;
+        CONFIGURATION_SET_ANSWER                  = 450;
 
-        JOB_GET_BOOK_REQUEST                      = 500;
-        JOB_GET_BOOK_ANSWER                       = 501;
-        JOB_GET_USER_REQUEST                      = 502;
-        JOB_GET_USER_ANSWER                       = 503;
-        JOB_SET_REQUEST                           = 504;
-        JOB_SET_ANSWER                            = 505;
+        ENCYCLOPEDIA_ALMANAX_REQUEST              = 500;
+        ENCYCLOPEDIA_ALMANAX_ANSWER               = 501;
+        ENCYCLOPEDIA_ALMANAX_RESOURCE_REQUEST     = 502;
+        ENCYCLOPEDIA_ALMANAX_RESOURCE_ANSWER      = 503;
+        ENCYCLOPEDIA_ALMANAX_EFFECT_REQUEST       = 504;
+        ENCYCLOPEDIA_ALMANAX_EFFECT_ANSWER        = 505;
+        ENCYCLOPEDIA_LIST_REQUEST                 = 506;
+        ENCYCLOPEDIA_LIST_ANSWER                  = 507;
+        ENCYCLOPEDIA_ITEM_REQUEST                 = 508;
+        ENCYCLOPEDIA_ITEM_ANSWER                  = 509;
 
-        NEWS_RSS                                  = 600;
-        NEWS_TWITTER                              = 601;
+        HELP_REQUEST                              = 600;
+        
+        JOB_GET_BOOK_REQUEST                      = 700;
+        JOB_GET_BOOK_ANSWER                       = 701;
+        JOB_GET_USER_REQUEST                      = 702;
+        JOB_GET_USER_ANSWER                       = 703;
+        JOB_SET_REQUEST                           = 704;
+        JOB_SET_ANSWER                            = 705;
 
-        PORTAL_POSITION_REQUEST                   = 700;
-        PORTAL_POSITION_ANSWER                    = 701;
+        NEWS_RSS                                  = 800;
+        NEWS_TWITTER                              = 801;
+
+        PORTAL_POSITION_REQUEST                   = 900;
+        PORTAL_POSITION_ANSWER                    = 901;
     }
 
     enum Status 
