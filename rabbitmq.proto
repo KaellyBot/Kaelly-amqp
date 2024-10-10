@@ -486,9 +486,10 @@ message EncyclopediaItemAnswer
     {
         string             id         = 1;
         string             name       = 2;
-        int64              level      = 3;
-        repeated Equipment equipments = 4;
-        repeated Bonus     bonuses    = 5;
+        string             icon      =  3;
+        int64              level      = 4;
+        repeated Equipment equipments = 5;
+        repeated Bonus     bonuses    = 6;
 
         message Equipment 
         {
