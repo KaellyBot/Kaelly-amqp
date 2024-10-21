@@ -153,9 +153,10 @@ enum EquipmentType
 enum ItemType
 {
     ANY_ITEM   = 0;
-    EQUIPMENT  = 1;
-    MOUNT_TYPE = 2;
-    SET        = 3;
+    COSMETIC   = 1;
+    EQUIPMENT  = 2;
+    MOUNT_TYPE = 3;
+    SET        = 4;
 }
 
 enum IngredientType
