@@ -496,10 +496,11 @@ message EncyclopediaItemAnswer
     {
         string             id         = 1;
         string             name       = 2;
-        string             icon      =  3;
+        string             icon       = 3;
         int64              level      = 4;
-        repeated Equipment equipments = 5;
-        repeated Bonus     bonuses    = 6;
+        bool               isCosmetic = 5;
+        repeated Equipment equipments = 6;
+        repeated Bonus     bonuses    = 7;
 
         message Equipment 
         {
