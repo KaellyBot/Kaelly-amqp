@@ -136,18 +136,27 @@ enum Language
 
 enum EquipmentType
 {
-    NONE   = 0;
-    HAT    = 1;
-    CLOAK  = 2;
-    AMULET = 3;
-    RING   = 4;
-    BELT   = 5;
-    BOOT   = 6;
-    WEAPON = 7;
-    SHIELD = 8;
-    PET    = 9;
-    MOUNT  = 10;
-    DOFUS  = 11;
+    NONE         = 0;
+
+    // Equipment
+    HAT          = 1;
+    CLOAK        = 2;
+    AMULET       = 3;
+    RING         = 4;
+    BELT         = 5;
+    BOOT         = 6;
+    WEAPON       = 7;
+    SHIELD       = 8;
+    PET          = 9;
+    MOUNT        = 10;
+    DOFUS        = 11;
+
+    // Cosmetic
+    SHOULDER_PAD  = 12;
+    WING          = 13;
+    COSTUME       = 14;
+    MISC_COSMETIC = 15;
+    LIVING_OBJECT = 16;
 }
 
 enum ItemType
