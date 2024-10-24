@@ -161,11 +161,13 @@ enum EquipmentType
 
 enum ItemType
 {
-    ANY_ITEM   = 0;
-    COSMETIC   = 1;
-    EQUIPMENT  = 2;
-    MOUNT_TYPE = 3;
-    SET        = 4;
+    ANY_ITEM_TYPE   = 0;
+    CONSUMABLE_TYPE = 1;
+    COSMETIC_TYPE   = 2;
+    EQUIPMENT_TYPE  = 3;
+    MOUNT_TYPE      = 4;
+    RESOURCE_TYPE   = 5;
+    SET_TYPE        = 6;
 }
 
 enum IngredientType
@@ -192,8 +194,9 @@ message Almanax
 
         message Item
         {
-            string name = 1;
-            string icon = 2;
+            string name   = 1;
+            string icon   = 2;
+            ItemType type = 3;
         }
     }
 }
