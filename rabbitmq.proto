@@ -166,17 +166,9 @@ enum ItemType
     COSMETIC_TYPE   = 2;
     EQUIPMENT_TYPE  = 3;
     MOUNT_TYPE      = 4;
-    RESOURCE_TYPE   = 5;
-    SET_TYPE        = 6;
-}
-
-enum IngredientType
-{
-    ANY_INGREDIENT       = 0;
-    CONSUMABLE           = 1;
-    EQUIPMENT_INGREDIENT = 2;
-    QUEST_ITEM           = 3;
-    RESOURCE             = 4;
+    QUEST_ITEM_TYPE = 5;
+    RESOURCE_TYPE   = 6;
+    SET_TYPE        = 7;
 }
 
 message Almanax
@@ -419,8 +411,9 @@ message EncyclopediaAlmanaxResourceAnswer
 
     message Tribute
     {
-        string itemName = 1;
-        int32  quantity = 2;
+        string   itemName = 1;
+        ItemType itemType = 2;
+        int32    quantity = 3;
     }
 }
 
@@ -533,10 +526,10 @@ message EncyclopediaItemAnswer
 
         message Ingredient
         {
-            string         id       = 1;
-            string         name     = 2;
-            int64          quantity = 3;
-            IngredientType type     = 4;
+            string   id       = 1;
+            string   name     = 2;
+            int64    quantity = 3;
+            ItemType type     = 4;
         }
     }
 }
