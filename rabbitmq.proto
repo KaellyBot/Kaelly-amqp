@@ -424,7 +424,7 @@ message EncyclopediaAlmanaxEffectRequest
 
 message EncyclopediaAlmanaxEffectAnswer
 {
-    Almanax almanax = 1;
+    repeated Almanax almanaxes = 1;
 }
 
 message EncyclopediaListRequest
