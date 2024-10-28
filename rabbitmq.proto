@@ -419,7 +419,14 @@ message EncyclopediaAlmanaxResourceAnswer
 
 message EncyclopediaAlmanaxEffectRequest
 {
-    string query = 1;
+    string                    query = 1;
+    google.protobuf.Timestamp date  = 2;
+    RequestType               type  = 3;
+
+    enum RequestType {
+        QUERY = 1;
+        DATE  = 2;
+    }
 }
 
 message EncyclopediaAlmanaxEffectAnswer
