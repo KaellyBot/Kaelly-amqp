@@ -177,7 +177,6 @@ message Almanax
     Tribute                   tribute  = 2;
     int64                     reward   = 3;
     google.protobuf.Timestamp date     = 4;
-    Source                    source   = 5;
 
     message Tribute
     {
@@ -396,6 +395,7 @@ message EncyclopediaAlmanaxRequest
 message EncyclopediaAlmanaxAnswer
 {
     Almanax almanax = 1;
+    Source  source  = 2;
 }
 
 message EncyclopediaAlmanaxResourceRequest
@@ -419,9 +419,11 @@ message EncyclopediaAlmanaxResourceAnswer
 
 message EncyclopediaAlmanaxEffectRequest
 {
-    string                    query = 1;
-    google.protobuf.Timestamp date  = 2;
-    RequestType               type  = 3;
+    string                    query  = 1;
+    google.protobuf.Timestamp date   = 2;
+    RequestType               type   = 3;
+    int32                     offset = 4;
+    int32                     size   = 5;
 
     enum RequestType {
         QUERY = 0;
@@ -432,7 +434,11 @@ message EncyclopediaAlmanaxEffectRequest
 message EncyclopediaAlmanaxEffectAnswer
 {
     string           query     = 1;
-    repeated Almanax almanaxes = 2;
+    int32            page      = 2;
+    int32            pages     = 3;
+    int32            total     = 4;
+    repeated Almanax almanaxes = 5;
+    Source           source    = 6;
 }
 
 message EncyclopediaListRequest
