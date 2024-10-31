@@ -205,13 +205,17 @@ message AlignGetBookRequest
     string          cityId   = 2;
     string          orderId  = 3;
     string          serverId = 4;
-    int64           limit    = 5;
+    int32           offset   = 5;
+    int32           size     = 6;
 }
 
 message AlignGetBookAnswer
 {
     string            serverId  = 1;
-    repeated Believer believers = 2;
+    int32             page      = 2;
+    int32             pages     = 3;
+    int32             total     = 4;
+    repeated Believer believers = 5;
     
     message Believer
     {
@@ -398,25 +402,6 @@ message EncyclopediaAlmanaxAnswer
     Source  source  = 2;
 }
 
-message EncyclopediaAlmanaxResourceRequest
-{
-    int32 duration = 1;
-}
-
-message EncyclopediaAlmanaxResourceAnswer
-{
-    repeated Tribute tributes = 1;
-    int32            duration = 2;
-    Source           source   = 3;
-
-    message Tribute
-    {
-        string   itemName = 1;
-        ItemType itemType = 2;
-        int32    quantity = 3;
-    }
-}
-
 message EncyclopediaAlmanaxEffectRequest
 {
     string                    query  = 1;
@@ -439,6 +424,25 @@ message EncyclopediaAlmanaxEffectAnswer
     int32            total     = 4;
     repeated Almanax almanaxes = 5;
     Source           source    = 6;
+}
+
+message EncyclopediaAlmanaxResourceRequest
+{
+    int32 duration = 1;
+}
+
+message EncyclopediaAlmanaxResourceAnswer
+{
+    repeated Tribute tributes = 1;
+    int32            duration = 2;
+    Source           source   = 3;
+
+    message Tribute
+    {
+        string   itemName = 1;
+        ItemType itemType = 2;
+        int32    quantity = 3;
+    }
 }
 
 message EncyclopediaListRequest
@@ -553,14 +557,18 @@ message JobGetBookRequest
     repeated string userIds  = 1;
     string          jobId    = 2;
     string          serverId = 3;
-    int64           limit    = 4;
+    int32           offset   = 4;
+    int32           size     = 5;
 }
 
 message JobGetBookAnswer
 {
     string             jobId     = 1;
     string             serverId  = 2;
-    repeated Craftsman craftsmen = 3;
+    int32              page      = 3;
+    int32              pages     = 4;
+    int32              total     = 5;
+    repeated Craftsman craftsmen = 6;
     
     message Craftsman
     {
