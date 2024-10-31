@@ -211,11 +211,13 @@ message AlignGetBookRequest
 
 message AlignGetBookAnswer
 {
-    string            serverId  = 1;
-    int32             page      = 2;
-    int32             pages     = 3;
-    int32             total     = 4;
-    repeated Believer believers = 5;
+    string            cityId    = 1;
+    string            orderId   = 2;
+    string            serverId  = 3;
+    int32             page      = 4;
+    int32             pages     = 5;
+    int32             total     = 6;
+    repeated Believer believers = 7;
     
     message Believer
     {
