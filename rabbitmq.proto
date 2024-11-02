@@ -317,7 +317,7 @@ message ConfigurationGetAnswer
 
     message TwitterWebhook {
         string   channelId = 1;
-        string   name      = 2;
+        string   twitterId = 2;
         string   webhookId = 3;
     }
 
