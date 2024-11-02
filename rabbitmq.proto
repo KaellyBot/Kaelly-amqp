@@ -319,7 +319,6 @@ message ConfigurationGetAnswer
         string   channelId = 1;
         string   name      = 2;
         string   webhookId = 3;
-        Language language  = 4;
     }
 
     message YoutubeWebhook {
@@ -371,10 +370,10 @@ message ConfigurationSetTwitterWebhookRequest
 {
     string   guildId      = 1;
     string   channelId    = 2;
-    string   webhookId    = 3;
-    string   webhookToken = 4;
-    bool     enabled      = 5;
-    Language language     = 6;
+    string   twitterId    = 3;
+    string   webhookId    = 4;
+    string   webhookToken = 5;
+    bool     enabled      = 6;
 }
 
 message ConfigurationSetYoutubeWebhookRequest
