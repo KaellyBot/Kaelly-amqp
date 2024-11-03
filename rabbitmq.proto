@@ -299,14 +299,12 @@ message ConfigurationGetAnswer
     message AlmanaxWebhook {
         string   channelId = 1;
         string   webhookId = 2;
-        Language language  = 3;
     }
 
     message RssWebhook {
         string   channelId = 1;
         string   feedId    = 2;
         string   webhookId = 3;
-        Language language  = 4;
     }
 
     message TwitchWebhook {
@@ -342,7 +340,6 @@ message ConfigurationSetAlmanaxWebhookRequest
     string   webhookId    = 3;
     string   webhookToken = 4;
     bool     enabled      = 5;
-    Language language     = 6;
 }
 
 message ConfigurationSetRssWebhookRequest
@@ -353,7 +350,6 @@ message ConfigurationSetRssWebhookRequest
     string   webhookId    = 4;
     string   webhookToken = 5;
     bool     enabled      = 6;
-    Language language     = 7;
 }
 
 message ConfigurationSetTwitchWebhookRequest
