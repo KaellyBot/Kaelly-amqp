@@ -12,6 +12,7 @@ message RabbitMQMessage
     Language language = 2;
     Status   status   = 3;
     Game     game     = 4;
+    string   userID   = 5;
 
     AlignGetBookRequest                    alignGetBookRequest                   = 100;
     AlignGetBookAnswer                     alignGetBookAnswer                    = 101;
