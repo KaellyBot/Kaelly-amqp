@@ -140,24 +140,37 @@ enum EquipmentType
     NONE         = 0;
 
     // Equipment
-    HAT          = 1;
-    CLOAK        = 2;
-    AMULET       = 3;
-    RING         = 4;
-    BELT         = 5;
-    BOOT         = 6;
-    WEAPON       = 7;
-    SHIELD       = 8;
-    PET          = 9;
-    MOUNT        = 10;
-    DOFUS        = 11;
+    AMULET        =  1;
+    AXE           =  2;
+    BELT          =  3;
+    BOOT          =  4;
+    BOW           =  5;
+    CLOAK         =  6;
+    DAGGER        =  7;
+    DOFUS         =  8;
+    DRAGOTURKEY   =  9;
+    HAMMER        = 10;
+    HAT           = 11;
+    LANCE         = 12;
+    RING          = 13;
+    PET           = 14;
+    PETSMOUNT     = 15;
+    PICKAXE       = 16;
+    RHINEETLE     = 17;
+    SCYTHE        = 18;
+    SEEMYOOL      = 19;
+    SHIELD        = 20;
+    SHOVEL        = 21;
+    STAFF         = 22;
+    SWORD         = 23;
+    WAND          = 24;
 
     // Cosmetic
-    SHOULDER_PAD  = 12;
-    WING          = 13;
-    COSTUME       = 14;
-    MISC_COSMETIC = 15;
-    LIVING_OBJECT = 16;
+    COSTUME       = 25;
+    LIVING_OBJECT = 26;
+    MISC_COSMETIC = 27;
+    SHOULDER_PAD  = 28;
+    WING          = 29;
 }
 
 enum ItemType
@@ -484,27 +497,45 @@ message EncyclopediaItemAnswer
 
     message Equipment
     {
-        string          id            =  1;
-        string          name          =  2;
-        string          description   =  3;
-        string          labelType     =  4;
-        string          icon          =  5;
-        int64           level         =  6;
-        int64           pods          =  7;
-        EquipmentType   equipmentType =  8;
-        Set             set           =  9;
-        repeated Effect effects       = 10;
-        Recipe          recipe        = 11;
-        // TODO Damage, conditions, Misc (two hands, ap cost, etc)
+        string          id              =  1;
+        string          name            =  2;
+        string          description     =  3;
+        Type            type            =  4;
+        string          icon            =  5;
+        int64           level           =  6;
+        int64           pods            =  7;
+        SetFamily       set             =  8;
+        Characteristics characteristics =  9;
+        repeated Effect weaponEffects   = 10;
+        repeated Effect effects         = 11;
+        repeated string conditions      = 12;
+        Recipe          recipe          = 13;
+       
+        message Characteristics {
+            int64           cost           = 1;
+            int64           minRange       = 2;
+            int64           maxRange       = 3;
+            int64           maxCastPerTurn = 4;
+            int64           criticalRate   = 5;
+            int64           criticalBonus  = 6;
+            repeated string areas          = 7; //TODO
+            // TODO LDV ?
+        }
 
-        message Set
+        message Type {
+            EquipmentType equipmentType  = 1;
+            ItemType      itemType       = 2;
+            string        equipmentLabel = 3;
+        }
+
+        message SetFamily
         {
             string id   = 1;
             string name = 2;
         }
     }
 
-    message Set        
+    message Set
     {
         string             id         = 1;
         string             name       = 2;
@@ -533,7 +564,6 @@ message EncyclopediaItemAnswer
     {
         string id       = 1;
         string label    = 2;
-        bool   isActive = 3;
     }
 
     message Recipe
