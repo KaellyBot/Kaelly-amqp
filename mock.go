@@ -5,18 +5,30 @@ import (
 )
 
 type Mock struct {
-	PublishFunc     func(msg *RabbitMQMessage, exchange Exchange, routingKey, correlationID string) error
+	RequestFunc func(msg *RabbitMQMessage, exchange Exchange, routingKey,
+		correlationID, replyTo string) error
+	ReplyFunc       func(msg *RabbitMQMessage, correlationID, replyTo string) error
 	ConsumeFunc     func(queueName, routingKey string, consumer MessageConsumer) error
 	IsConnectedFunc func() bool
 	ShutdownFunc    func()
 }
 
-func (mock *Mock) Publish(msg *RabbitMQMessage, exchange Exchange, routingKey, correlationID string) error {
-	if mock.PublishFunc != nil {
-		return mock.PublishFunc(msg, exchange, routingKey, correlationID)
+func (mock *Mock) Request(msg *RabbitMQMessage, exchange Exchange, routingKey,
+	correlationID, replyTo string) error {
+	if mock.RequestFunc != nil {
+		return mock.RequestFunc(msg, exchange, routingKey, correlationID, replyTo)
 	}
 
-	log.Warn().Msgf("No mock provided for Publish function")
+	log.Warn().Msgf("No mock provided for Request function")
+	return nil
+}
+
+func (mock *Mock) Reply(msg *RabbitMQMessage, correlationID, replyTo string) error {
+	if mock.ReplyFunc != nil {
+		return mock.ReplyFunc(msg, correlationID, replyTo)
+	}
+
+	log.Warn().Msgf("No mock provided for Reply function")
 	return nil
 }
 

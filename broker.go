@@ -1,9 +1,9 @@
 package amqp
 
 import (
-	"context"
 	"fmt"
 	"sync"
+	"time"
 
 	"github.com/rabbitmq/amqp091-go"
 	"github.com/rs/zerolog/log"
@@ -64,7 +64,7 @@ func (broker *Impl) dial() error {
 
 func (broker *Impl) declareBindings() error {
 	for _, binding := range broker.bindings {
-		uniqueQueue := broker.getIdentifiedQueue(binding.Queue)
+		uniqueQueue := broker.GetIdentifiedQueue(binding.Queue)
 		_, err := broker.consumerChannel.QueueDeclare(
 			uniqueQueue, // name
 			true,        // durable
@@ -101,7 +101,7 @@ func (broker *Impl) getConsumerTag(queue string) string {
 	return fmt.Sprintf("%s.%s", broker.clientID, queue)
 }
 
-func (broker *Impl) getIdentifiedQueue(queue string) string {
+func (broker *Impl) GetIdentifiedQueue(queue string) string {
 	return fmt.Sprintf("%s.%s", broker.clientID, queue)
 }
 
@@ -123,7 +123,8 @@ func (broker *Impl) reconnect() {
 	// TODO handle reconnection
 }
 
-func (broker *Impl) Publish(msg *RabbitMQMessage, exchange Exchange, routingKey, correlationID string) error {
+func (broker *Impl) Request(msg *RabbitMQMessage, exchange Exchange, routingKey,
+	correlationID, replyTo string) error {
 	if !broker.IsConnected() {
 		return ErrMustBeConnected
 	}
@@ -138,7 +139,7 @@ func (broker *Impl) Publish(msg *RabbitMQMessage, exchange Exchange, routingKey,
 		Str(logExchange, string(exchange)).
 		Str(logRoutingKey, routingKey).
 		Str(logContent, string(data)).
-		Msgf("Sending message...")
+		Msgf("Requesting message...")
 	err = broker.publisherChannel.Publish(
 		string(exchange),
 		routingKey,
@@ -147,6 +148,43 @@ func (broker *Impl) Publish(msg *RabbitMQMessage, exchange Exchange, routingKey,
 		amqp091.Publishing{
 			ContentType:   "application/protobuf",
 			CorrelationId: correlationID,
+			Timestamp:     time.Now(),
+			ReplyTo:       broker.GetIdentifiedQueue(replyTo),
+			Body:          data,
+		},
+	)
+	if err != nil {
+		log.Error().Err(err).Msgf("Failed to publish message")
+		return err
+	}
+
+	return nil
+}
+
+func (broker *Impl) Reply(msg *RabbitMQMessage, correlationID, replyTo string) error {
+	if !broker.IsConnected() {
+		return ErrMustBeConnected
+	}
+
+	data, err := proto.Marshal(msg)
+	if err != nil {
+		log.Error().Err(err).Interface(logProto, msg).Msgf("Publication ignored since marshal failed")
+		return err
+	}
+
+	log.Debug().
+		Str(logRoutingKey, replyTo).
+		Str(logContent, string(data)).
+		Msgf("Replying message...")
+	err = broker.publisherChannel.Publish(
+		"",
+		replyTo,
+		false,
+		false,
+		amqp091.Publishing{
+			ContentType:   "application/protobuf",
+			CorrelationId: correlationID,
+			Timestamp:     time.Now(),
 			Body:          data,
 		},
 	)
@@ -164,7 +202,7 @@ func (broker *Impl) Consume(queueName string, consumer MessageConsumer) error {
 	}
 
 	delivery, err := broker.consumerChannel.Consume(
-		broker.getIdentifiedQueue(queueName), // queue
+		broker.GetIdentifiedQueue(queueName), // queue
 		broker.getConsumerTag(queueName),     // consumer
 		true,                                 // auto ack
 		false,                                // exclusive
@@ -182,22 +220,23 @@ func (broker *Impl) Consume(queueName string, consumer MessageConsumer) error {
 
 func (broker *Impl) dispatch(delivery <-chan amqp091.Delivery, consumer MessageConsumer) {
 	for data := range delivery {
+		ctx := withData(data)
 		var message RabbitMQMessage
 		if err := proto.Unmarshal(data.Body, &message); err != nil {
 			log.Error().Err(err).Msgf("Protobuf unmarshal failed, message ignored. Continuing...")
 		} else {
-			broker.callConsumer(consumer, &message, data.CorrelationId)
+			broker.callConsumer(ctx, consumer, &message)
 		}
 	}
 }
 
-func (broker *Impl) callConsumer(consumer MessageConsumer, message *RabbitMQMessage, correlationID string) {
+func (broker *Impl) callConsumer(ctx Context, consumer MessageConsumer, message *RabbitMQMessage) {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Error().Interface(logPanic, err).Msgf("Message consumer panicked. Continuing...")
 		}
 	}()
-	consumer(context.WithValue(context.Background(), ContextCorrelationID, correlationID), message, correlationID)
+	consumer(ctx, message)
 }
 
 func (broker *Impl) IsConnected() bool {

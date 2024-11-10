@@ -1,7 +1,6 @@
 package amqp
 
 import (
-	"context"
 	"errors"
 	"sync"
 
@@ -9,10 +8,7 @@ import (
 )
 
 const (
-	ContextCorrelationID ContextKey = "correlationID"
-
 	ExchangeRequest Exchange = "requests"
-	ExchangeAnswer  Exchange = "answers"
 	ExchangeNews    Exchange = "news"
 )
 
@@ -21,15 +17,15 @@ var (
 	ErrMustBeConnected   = errors.New("this function requires to be connected to AMQP server")
 )
 
-type ContextKey string
-
 type Exchange string
 
-type MessageConsumer func(ctx context.Context, message *RabbitMQMessage, correlationID string)
+type MessageConsumer func(ctx Context, message *RabbitMQMessage)
 
 type MessageBroker interface {
-	Publish(msg *RabbitMQMessage, exchange Exchange, routingKey, correlationID string) error
+	Request(msg *RabbitMQMessage, exchange Exchange, routingKey, correlationID, replyTo string) error
+	Reply(msg *RabbitMQMessage, correlationID, replyTo string) error
 	Consume(queueName string, consumer MessageConsumer) error
+	GetIdentifiedQueue(queue string) string
 	IsConnected() bool
 	Shutdown()
 }
