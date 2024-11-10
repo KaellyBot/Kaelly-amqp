@@ -123,8 +123,22 @@ func (broker *Impl) reconnect() {
 	// TODO handle reconnection
 }
 
+func (broker *Impl) Emit(msg *RabbitMQMessage, exchange Exchange, routingKey,
+	correlationID string) error {
+	return broker.publish(msg, exchange, routingKey, correlationID, "")
+}
+
 func (broker *Impl) Request(msg *RabbitMQMessage, exchange Exchange, routingKey,
 	correlationID, replyTo string) error {
+	return broker.publish(msg, Exchange(""), routingKey, correlationID, replyTo)
+}
+
+func (broker *Impl) Reply(msg *RabbitMQMessage, correlationID, replyTo string) error {
+	return broker.publish(msg, Exchange(""), replyTo, correlationID, "")
+}
+
+func (broker *Impl) publish(msg *RabbitMQMessage, exchange Exchange,
+	routingKey, correlationID, replyTo string) error {
 	if !broker.IsConnected() {
 		return ErrMustBeConnected
 	}
@@ -137,9 +151,11 @@ func (broker *Impl) Request(msg *RabbitMQMessage, exchange Exchange, routingKey,
 
 	log.Debug().
 		Str(logExchange, string(exchange)).
+		Str(logCorrelationID, correlationID).
 		Str(logRoutingKey, routingKey).
+		Str(logReplyTo, replyTo).
 		Str(logContent, string(data)).
-		Msgf("Requesting message...")
+		Msgf("Publishing message...")
 	err = broker.publisherChannel.Publish(
 		string(exchange),
 		routingKey,
@@ -148,42 +164,7 @@ func (broker *Impl) Request(msg *RabbitMQMessage, exchange Exchange, routingKey,
 		amqp091.Publishing{
 			ContentType:   "application/protobuf",
 			CorrelationId: correlationID,
-			Timestamp:     time.Now(),
 			ReplyTo:       broker.GetIdentifiedQueue(replyTo),
-			Body:          data,
-		},
-	)
-	if err != nil {
-		log.Error().Err(err).Msgf("Failed to publish message")
-		return err
-	}
-
-	return nil
-}
-
-func (broker *Impl) Reply(msg *RabbitMQMessage, correlationID, replyTo string) error {
-	if !broker.IsConnected() {
-		return ErrMustBeConnected
-	}
-
-	data, err := proto.Marshal(msg)
-	if err != nil {
-		log.Error().Err(err).Interface(logProto, msg).Msgf("Publication ignored since marshal failed")
-		return err
-	}
-
-	log.Debug().
-		Str(logRoutingKey, replyTo).
-		Str(logContent, string(data)).
-		Msgf("Replying message...")
-	err = broker.publisherChannel.Publish(
-		"",
-		replyTo,
-		false,
-		false,
-		amqp091.Publishing{
-			ContentType:   "application/protobuf",
-			CorrelationId: correlationID,
 			Timestamp:     time.Now(),
 			Body:          data,
 		},

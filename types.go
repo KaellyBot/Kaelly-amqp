@@ -22,6 +22,7 @@ type Exchange string
 type MessageConsumer func(ctx Context, message *RabbitMQMessage)
 
 type MessageBroker interface {
+	Emit(msg *RabbitMQMessage, exchange Exchange, routingKey, correlationID string) error
 	Request(msg *RabbitMQMessage, exchange Exchange, routingKey, correlationID, replyTo string) error
 	Reply(msg *RabbitMQMessage, correlationID, replyTo string) error
 	Consume(queueName string, consumer MessageConsumer) error
