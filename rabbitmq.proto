@@ -511,7 +511,7 @@ message EncyclopediaItemAnswer
         Characteristics characteristics =  9;
         repeated Effect weaponEffects   = 10;
         repeated Effect effects         = 11;
-        repeated string conditions      = 12;
+        Conditions      conditions      = 12;
         Recipe          recipe          = 13;
        
         message Characteristics {
@@ -567,6 +567,33 @@ message EncyclopediaItemAnswer
     {
         string id       = 1;
         string label    = 2;
+    }
+
+    message Conditions 
+    {
+        Relation            relation  = 1;
+        repeated Conditions children  = 2;
+        Condition           condition = 3;
+
+        enum Relation 
+        {
+            NONE = 0;
+            AND  = 1;
+            OR   = 2;
+        }
+
+        message Condition 
+        {
+            string  operator = 1;
+            int64   value    = 2;
+            Element element  = 3;
+
+            message Element
+            {
+                string id   = 1;
+                string name = 2;
+            }
+        }
     }
 
     message Recipe
