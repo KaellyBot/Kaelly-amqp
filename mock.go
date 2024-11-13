@@ -5,6 +5,7 @@ import (
 )
 
 type Mock struct {
+	RunFunc  func(bindings []Binding) error
 	EmitFunc func(msg *RabbitMQMessage, exchange Exchange, routingKey,
 		correlationID string) error
 	RequestFunc func(msg *RabbitMQMessage, exchange Exchange, routingKey,
@@ -14,6 +15,15 @@ type Mock struct {
 	GetIdentifiedQueueFunc func(queue string) string
 	IsConnectedFunc        func() bool
 	ShutdownFunc           func()
+}
+
+func (mock *Mock) Run(bindings []Binding) error {
+	if mock.RunFunc != nil {
+		return mock.RunFunc(bindings)
+	}
+
+	log.Warn().Msgf("No mock provided for Run function")
+	return nil
 }
 
 func (mock *Mock) Emit(msg *RabbitMQMessage, exchange Exchange, routingKey,

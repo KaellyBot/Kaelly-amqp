@@ -13,25 +13,21 @@ import (
 /*
 - clientID: ID used to be identified as a publisher/consumer
 - address: string with the following format: `amqp://username:password@hostname:port/vhost`
-- topics: topics used to publish and consume messages
-- bindings: topic, routingKey and queue used to consume messages.
 */
-func New(clientID, address string, bindings []Binding) (*Impl, error) {
+func New(clientID, address string) *Impl {
 	broker := Impl{
 		clientID:    clientID,
 		address:     address,
-		bindings:    bindings,
 		isConnected: false,
 		mutex:       &sync.Mutex{},
 	}
 
-	return &broker, broker.dial()
+	return &broker
 }
 
-func (broker *Impl) dial() error {
+func (broker *Impl) Run(bindings []Binding) error {
 	broker.mutex.Lock()
 	defer broker.mutex.Unlock()
-
 	var err error
 	if broker.connection, err = amqp091.Dial(broker.address); err != nil {
 		log.Error().Err(err).Msgf("Failed to connect to AMQP server")
@@ -50,7 +46,7 @@ func (broker *Impl) dial() error {
 		return ErrCannotBeConnected
 	}
 
-	if err = broker.declareBindings(); err != nil {
+	if err = broker.declareBindings(bindings); err != nil {
 		log.Error().Err(err).Msgf("Failed to declare topics, queues and bindings")
 		broker.Shutdown()
 		return ErrCannotBeConnected
@@ -62,7 +58,79 @@ func (broker *Impl) dial() error {
 	return nil
 }
 
-func (broker *Impl) declareBindings() error {
+func (broker *Impl) Emit(msg *RabbitMQMessage, exchange Exchange, routingKey,
+	correlationID string) error {
+	return broker.publish(msg, exchange, routingKey, correlationID, "")
+}
+
+func (broker *Impl) Request(msg *RabbitMQMessage, exchange Exchange, routingKey,
+	correlationID, replyTo string) error {
+	return broker.publish(msg, exchange, routingKey, correlationID, replyTo)
+}
+
+func (broker *Impl) Reply(msg *RabbitMQMessage, correlationID, replyTo string) error {
+	return broker.publish(msg, Exchange(""), replyTo, correlationID, "")
+}
+
+func (broker *Impl) Consume(queueName string, consumer MessageConsumer) error {
+	if !broker.IsConnected() {
+		return ErrMustBeConnected
+	}
+
+	delivery, err := broker.consumerChannel.Consume(
+		broker.GetIdentifiedQueue(queueName), // queue
+		broker.getConsumerTag(queueName),     // consumer
+		true,                                 // auto ack
+		false,                                // exclusive
+		false,                                // no local
+		false,                                // no wait
+		nil,                                  // args
+	)
+	if err != nil {
+		return err
+	}
+
+	go broker.dispatch(delivery, consumer)
+	return nil
+}
+
+func (broker *Impl) GetIdentifiedQueue(queue string) string {
+	return fmt.Sprintf("%s.%s", broker.clientID, queue)
+}
+
+func (broker *Impl) IsConnected() bool {
+	return broker.isConnected
+}
+
+func (broker *Impl) Shutdown() {
+	broker.mutex.Lock()
+	defer broker.mutex.Unlock()
+	broker.isConnected = false
+
+	if broker.publisherChannel != nil && !broker.publisherChannel.IsClosed() {
+		err := broker.publisherChannel.Close()
+		if err != nil {
+			log.Warn().Err(err).Msgf("Failed to close channel during AMQP Shutdown")
+		}
+	}
+
+	if broker.consumerChannel != nil && !broker.consumerChannel.IsClosed() {
+		err := broker.consumerChannel.Close()
+		if err != nil {
+			log.Warn().Err(err).Msgf("Failed to close channel during AMQP Shutdown")
+		}
+	}
+
+	if broker.connection != nil {
+		err := broker.connection.Close()
+		if err != nil {
+			log.Warn().Err(err).Msgf("Failed to close connection during AMQP Shutdown")
+		}
+	}
+}
+
+func (broker *Impl) declareBindings(bindings []Binding) error {
+	broker.bindings = bindings
 	for _, binding := range broker.bindings {
 		uniqueQueue := broker.GetIdentifiedQueue(binding.Queue)
 		_, err := broker.consumerChannel.QueueDeclare(
@@ -101,10 +169,6 @@ func (broker *Impl) getConsumerTag(queue string) string {
 	return fmt.Sprintf("%s.%s", broker.clientID, queue)
 }
 
-func (broker *Impl) GetIdentifiedQueue(queue string) string {
-	return fmt.Sprintf("%s.%s", broker.clientID, queue)
-}
-
 func (broker *Impl) handleAMQPConnection() {
 	amqpClosed := broker.connection.NotifyClose(make(chan *amqp091.Error))
 	for err := range amqpClosed {
@@ -119,22 +183,7 @@ func (broker *Impl) reconnect() {
 	broker.mutex.Lock()
 	defer broker.mutex.Unlock()
 	broker.isConnected = false
-
 	// TODO handle reconnection
-}
-
-func (broker *Impl) Emit(msg *RabbitMQMessage, exchange Exchange, routingKey,
-	correlationID string) error {
-	return broker.publish(msg, exchange, routingKey, correlationID, "")
-}
-
-func (broker *Impl) Request(msg *RabbitMQMessage, exchange Exchange, routingKey,
-	correlationID, replyTo string) error {
-	return broker.publish(msg, exchange, routingKey, correlationID, replyTo)
-}
-
-func (broker *Impl) Reply(msg *RabbitMQMessage, correlationID, replyTo string) error {
-	return broker.publish(msg, Exchange(""), replyTo, correlationID, "")
 }
 
 func (broker *Impl) publish(msg *RabbitMQMessage, exchange Exchange,
@@ -177,28 +226,6 @@ func (broker *Impl) publish(msg *RabbitMQMessage, exchange Exchange,
 	return nil
 }
 
-func (broker *Impl) Consume(queueName string, consumer MessageConsumer) error {
-	if !broker.IsConnected() {
-		return ErrMustBeConnected
-	}
-
-	delivery, err := broker.consumerChannel.Consume(
-		broker.GetIdentifiedQueue(queueName), // queue
-		broker.getConsumerTag(queueName),     // consumer
-		true,                                 // auto ack
-		false,                                // exclusive
-		false,                                // no local
-		false,                                // no wait
-		nil,                                  // args
-	)
-	if err != nil {
-		return err
-	}
-
-	go broker.dispatch(delivery, consumer)
-	return nil
-}
-
 func (broker *Impl) dispatch(delivery <-chan amqp091.Delivery, consumer MessageConsumer) {
 	for data := range delivery {
 		ctx := withData(data)
@@ -218,35 +245,4 @@ func (broker *Impl) callConsumer(ctx Context, consumer MessageConsumer, message 
 		}
 	}()
 	consumer(ctx, message)
-}
-
-func (broker *Impl) IsConnected() bool {
-	return broker.isConnected
-}
-
-func (broker *Impl) Shutdown() {
-	broker.mutex.Lock()
-	defer broker.mutex.Unlock()
-	broker.isConnected = false
-
-	if broker.publisherChannel != nil && !broker.publisherChannel.IsClosed() {
-		err := broker.publisherChannel.Close()
-		if err != nil {
-			log.Warn().Err(err).Msgf("Failed to close channel during AMQP Shutdown")
-		}
-	}
-
-	if broker.consumerChannel != nil && !broker.consumerChannel.IsClosed() {
-		err := broker.consumerChannel.Close()
-		if err != nil {
-			log.Warn().Err(err).Msgf("Failed to close channel during AMQP Shutdown")
-		}
-	}
-
-	if broker.connection != nil {
-		err := broker.connection.Close()
-		if err != nil {
-			log.Warn().Err(err).Msgf("Failed to close connection during AMQP Shutdown")
-		}
-	}
 }
