@@ -130,7 +130,7 @@ func (broker *Impl) Emit(msg *RabbitMQMessage, exchange Exchange, routingKey,
 
 func (broker *Impl) Request(msg *RabbitMQMessage, exchange Exchange, routingKey,
 	correlationID, replyTo string) error {
-	return broker.publish(msg, Exchange(""), routingKey, correlationID, replyTo)
+	return broker.publish(msg, exchange, routingKey, correlationID, replyTo)
 }
 
 func (broker *Impl) Reply(msg *RabbitMQMessage, correlationID, replyTo string) error {
