@@ -3,6 +3,7 @@ package amqp
 import (
 	"errors"
 	"sync"
+	"time"
 
 	"github.com/rabbitmq/amqp091-go"
 )
@@ -10,11 +11,17 @@ import (
 const (
 	ExchangeRequest Exchange = "requests"
 	ExchangeNews    Exchange = "news"
+
+	defaultRetryDelay = 5 * time.Second
 )
 
 var (
-	ErrCannotBeConnected = errors.New("cannot be connected, please check AMQP server or address")
-	ErrMustBeConnected   = errors.New("this function requires to be connected to AMQP server")
+	ErrAlreadyStarted        = errors.New("client is already started. Aborting new attempt")
+	ErrCannotBeConnected     = errors.New("cannot be connected, please check AMQP server or address")
+	ErrMustBeConnected       = errors.New("this function requires to be connected to AMQP server")
+	ErrCommunicationIsBroken = errors.New("action cannot continue because communication is broken")
+	ErrClientNotInitialized  = errors.New("client is not ready yet")
+	ErrActionCanceledByUser  = errors.New("action has been canceled by user by a shutdown")
 )
 
 type Exchange string
@@ -22,25 +29,32 @@ type Exchange string
 type MessageConsumer func(ctx Context, message *RabbitMQMessage)
 
 type MessageBroker interface {
-	Run(bindings []Binding) error
+	Run() error
 	Emit(msg *RabbitMQMessage, exchange Exchange, routingKey, correlationID string) error
 	Request(msg *RabbitMQMessage, exchange Exchange, routingKey, correlationID, replyTo string) error
 	Reply(msg *RabbitMQMessage, correlationID, replyTo string) error
-	Consume(queueName string, consumer MessageConsumer) error
-	GetIdentifiedQueue(queue string) string
+	Consume(queueName string, consumer MessageConsumer)
 	IsConnected() bool
 	Shutdown()
 }
 
 type Impl struct {
-	connection       *amqp091.Connection
-	publisherChannel *amqp091.Channel
-	consumerChannel  *amqp091.Channel
-	mutex            *sync.Mutex
-	clientID         string
-	address          string
-	bindings         []Binding
-	isConnected      bool
+	clientID            string
+	address             string
+	cfg                 config
+	isConnected         bool
+	shouldBeConnected   bool
+	connection          *amqp091.Connection
+	publisherChannel    *amqp091.Channel
+	consumerChannel     *amqp091.Channel
+	notifyConClose      chan *amqp091.Error
+	notifyPubChanClose  chan *amqp091.Error
+	notifySubChanClose  chan *amqp091.Error
+	eventsChannels      map[string](chan connectionEvent)
+	mainEventsChan      chan connectionEvent
+	eventsChannelsMutex *sync.Mutex
+	connectionMutex     *sync.Mutex
+	callbackMutex       *sync.Mutex
 }
 
 type Binding struct {
@@ -48,3 +62,18 @@ type Binding struct {
 	RoutingKey string
 	Queue      string
 }
+
+type connectionEvent int
+
+const (
+	shutdown  connectionEvent = 1
+	issue     connectionEvent = 2
+	connected connectionEvent = 3
+)
+
+type interruptionAction int
+
+const (
+	reconnect interruptionAction = 1
+	exit      interruptionAction = 2
+)

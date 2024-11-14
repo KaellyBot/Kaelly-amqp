@@ -5,21 +5,20 @@ import (
 )
 
 type Mock struct {
-	RunFunc  func(bindings []Binding) error
+	RunFunc  func() error
 	EmitFunc func(msg *RabbitMQMessage, exchange Exchange, routingKey,
 		correlationID string) error
 	RequestFunc func(msg *RabbitMQMessage, exchange Exchange, routingKey,
 		correlationID, replyTo string) error
-	ReplyFunc              func(msg *RabbitMQMessage, correlationID, replyTo string) error
-	ConsumeFunc            func(queueName, routingKey string, consumer MessageConsumer) error
-	GetIdentifiedQueueFunc func(queue string) string
-	IsConnectedFunc        func() bool
-	ShutdownFunc           func()
+	ReplyFunc       func(msg *RabbitMQMessage, correlationID, replyTo string) error
+	ConsumeFunc     func(queueName, routingKey string, consumer MessageConsumer)
+	IsConnectedFunc func() bool
+	ShutdownFunc    func()
 }
 
-func (mock *Mock) Run(bindings []Binding) error {
+func (mock *Mock) Run() error {
 	if mock.RunFunc != nil {
-		return mock.RunFunc(bindings)
+		return mock.RunFunc()
 	}
 
 	log.Warn().Msgf("No mock provided for Run function")
@@ -55,22 +54,13 @@ func (mock *Mock) Reply(msg *RabbitMQMessage, correlationID, replyTo string) err
 	return nil
 }
 
-func (mock *Mock) Consume(queueName, routingKey string, consumer MessageConsumer) error {
+func (mock *Mock) Consume(queueName, routingKey string, consumer MessageConsumer) {
 	if mock.ConsumeFunc != nil {
-		return mock.ConsumeFunc(queueName, routingKey, consumer)
+		mock.ConsumeFunc(queueName, routingKey, consumer)
+		return
 	}
 
 	log.Warn().Msgf("No mock provided for Consume function")
-	return nil
-}
-
-func (mock *Mock) GetIdentifiedQueue(queue string) string {
-	if mock.GetIdentifiedQueueFunc != nil {
-		return mock.GetIdentifiedQueueFunc(queue)
-	}
-
-	log.Warn().Msgf("No mock provided for GetIdentifiedQueue function")
-	return ""
 }
 
 func (mock *Mock) IsConnected() bool {
