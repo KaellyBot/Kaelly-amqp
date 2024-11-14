@@ -53,10 +53,10 @@ message RabbitMQMessage
     JobSetAnswer                           jobSetAnswer                          = 505;
 
     NewsAlmanaxMessage                     newsAlmanaxMessage                    = 600;
-    NewsTwitterMessage                     newsTwitterMessage                    = 601;
+    NewsGameMessage                        newsGameMessage                       = 601;
     NewsRSSMessage                         newsRSSMessage                        = 602;
-    NewsGameMessage                        newsGameMessage                       = 603;
-    NewsSetMessage                         newsSetMessage                        = 604;
+    NewsSetMessage                         newsSetMessage                        = 603;
+    NewsTwitterMessage                     newsTwitterMessage                    = 604;
  
     PortalPositionRequest                  portalPositionRequest                 = 700;
     PortalPositionAnswer                   portalPositionAnswer                  = 701;
@@ -107,8 +107,11 @@ message RabbitMQMessage
         JOB_SET_REQUEST                           = 704;
         JOB_SET_ANSWER                            = 705;
 
-        NEWS_RSS                                  = 800;
-        NEWS_TWITTER                              = 801;
+        NEWS_ALMANAX                              = 800;     
+        NEWS_GAME                                 = 801;
+        NEWS_RSS                                  = 802;
+        NEWS_SET                                  = 803;
+        NEWS_TWITTER                              = 804;
 
         PORTAL_POSITION_REQUEST                   = 900;
         PORTAL_POSITION_ANSWER                    = 901;
@@ -703,7 +706,8 @@ message NewsGameMessage
 
 message NewsSetMessage
 {
-	int64 number = 1;
+	int64 missingSetNumber = 1;
+    int64 builtSetNumber   = 2;
 }
 
 message PortalPositionRequest
