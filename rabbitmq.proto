@@ -52,8 +52,11 @@ message RabbitMQMessage
     JobSetRequest                          jobSetRequest                         = 504;
     JobSetAnswer                           jobSetAnswer                          = 505;
 
-    NewsTwitterMessage                     newsTwitterMessage                    = 600;
-    NewsRSSMessage                         newsRSSMessage                        = 601;
+    NewsAlmanaxMessage                     newsAlmanaxMessage                    = 600;
+    NewsTwitterMessage                     newsTwitterMessage                    = 601;
+    NewsRSSMessage                         newsRSSMessage                        = 602;
+    NewsGameMessage                        newsGameMessage                       = 603;
+    NewsSetMessage                         newsSetMessage                        = 604;
  
     PortalPositionRequest                  portalPositionRequest                 = 700;
     PortalPositionAnswer                   portalPositionAnswer                  = 701;
@@ -665,6 +668,18 @@ message JobSetAnswer
 {
 }
 
+message NewsAlmanaxMessage
+{
+    repeated I18nAlmanax almanaxes = 1;
+    Source               source    = 2;
+
+    message I18nAlmanax
+    {
+        Almanax  almanax = 1;
+        Language locale  = 2;
+    }
+}
+
 message NewsTwitterMessage
 {
     string url                     = 1;
@@ -679,6 +694,16 @@ message NewsRSSMessage
     string                    iconUrl    = 4;
     google.protobuf.Timestamp date       = 5;
     string                    type       = 6;
+}
+
+message NewsGameMessage
+{
+	string version = 1;
+}
+
+message NewsSetMessage
+{
+	int64 number = 1;
 }
 
 message PortalPositionRequest
