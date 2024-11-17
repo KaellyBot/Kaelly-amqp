@@ -204,7 +204,7 @@ message Almanax
     message Tribute
     {
         Item  item     = 1;
-        int32 quantity = 2;
+        int64 quantity = 2;
 
         message Item
         {
@@ -228,8 +228,8 @@ message AlignGetBookRequest
     string          cityId   = 2;
     string          orderId  = 3;
     string          serverId = 4;
-    int32           offset   = 5;
-    int32           size     = 6;
+    int64           offset   = 5;
+    int64           size     = 6;
 }
 
 message AlignGetBookAnswer
@@ -237,9 +237,9 @@ message AlignGetBookAnswer
     string            cityId    = 1;
     string            orderId   = 2;
     string            serverId  = 3;
-    int32             page      = 4;
-    int32             pages     = 5;
-    int32             total     = 6;
+    int64             page      = 4;
+    int64             pages     = 5;
+    int64             total     = 6;
     repeated Believer believers = 7;
     
     message Believer
@@ -427,8 +427,8 @@ message EncyclopediaAlmanaxEffectRequest
     string                    query  = 1;
     google.protobuf.Timestamp date   = 2;
     RequestType               type   = 3;
-    int32                     offset = 4;
-    int32                     size   = 5;
+    int64                     offset = 4;
+    int64                     size   = 5;
 
     enum RequestType {
         QUERY = 0;
@@ -439,29 +439,29 @@ message EncyclopediaAlmanaxEffectRequest
 message EncyclopediaAlmanaxEffectAnswer
 {
     string           query     = 1;
-    int32            page      = 2;
-    int32            pages     = 3;
-    int32            total     = 4;
+    int64            page      = 2;
+    int64            pages     = 3;
+    int64            total     = 4;
     repeated Almanax almanaxes = 5;
     Source           source    = 6;
 }
 
 message EncyclopediaAlmanaxResourceRequest
 {
-    int32 duration = 1;
+    int64 duration = 1;
 }
 
 message EncyclopediaAlmanaxResourceAnswer
 {
     repeated Tribute tributes = 1;
-    int32            duration = 2;
+    int64            duration = 2;
     Source           source   = 3;
 
     message Tribute
     {
         string   itemName = 1;
         ItemType itemType = 2;
-        int32    quantity = 3;
+        int64    quantity = 3;
     }
 }
 
@@ -621,17 +621,17 @@ message JobGetBookRequest
     repeated string userIds  = 1;
     string          jobId    = 2;
     string          serverId = 3;
-    int32           offset   = 4;
-    int32           size     = 5;
+    int64           offset   = 4;
+    int64           size     = 5;
 }
 
 message JobGetBookAnswer
 {
     string             jobId     = 1;
     string             serverId  = 2;
-    int32              page      = 3;
-    int32              pages     = 4;
-    int32              total     = 5;
+    int64              page      = 3;
+    int64              pages     = 4;
+    int64              total     = 5;
     repeated Craftsman craftsmen = 6;
     
     message Craftsman
@@ -723,7 +723,7 @@ message PortalPositionAnswer
     message PortalPosition {
         string                    serverId      = 1;
         string                    dimensionId   = 2;
-        int32                     remainingUses = 3;
+        int64                     remainingUses = 3;
         Position                  position      = 4;
         string                    createdBy     = 5;
         string                    updatedBy     = 6;
@@ -732,8 +732,8 @@ message PortalPositionAnswer
         Source                    source        = 9;
 
         message Position {
-            int32 x                        = 1;
-            int32 y                        = 2;
+            int64 x                        = 1;
+            int64 y                        = 2;
             bool isInCanopy                = 3;
             Transport transport            = 4;
             Transport conditionalTransport = 5;
@@ -742,8 +742,8 @@ message PortalPositionAnswer
                 string areaId    = 1;
                 string subAreaId = 2;
                 string typeId    = 3;
-                int32 x          = 4;
-                int32 y          = 5;
+                int64 x          = 4;
+                int64 y          = 5;
             }
         }
     }
