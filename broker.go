@@ -36,13 +36,13 @@ Example usage:
 
 	broker := New(
 		"myClientID",
-		"amqp://user:pass@localhost:5672/vhost",
+		"amqp://user:pass@localhost:5672",
 		WithRetryDelay(10*time.Second),
 		WithIsConnectedCallback(myCallback),
 	)
 */
-func New(clientID, address string, opts ...Option) *Impl {
-	broker := Impl{
+func New(clientID, address string, opts ...Option) MessageBroker {
+	broker := messageBroker{
 		clientID: clientID,
 		address:  address,
 		cfg: config{
@@ -69,7 +69,7 @@ func New(clientID, address string, opts ...Option) *Impl {
 // No matters if it successfully connects or not, it starts a go routine
 // to watch out the connection and to make sure that it stays up
 // User is expected to defer call Shutdown() to stop the connection in the end.
-func (broker *Impl) Run() error {
+func (broker *messageBroker) Run() error {
 	broker.connectionMutex.Lock()
 	defer broker.connectionMutex.Unlock()
 
@@ -85,21 +85,21 @@ func (broker *Impl) Run() error {
 	return <-firstConnectionResult
 }
 
-func (broker *Impl) Emit(msg *RabbitMQMessage, exchange Exchange, routingKey,
+func (broker *messageBroker) Emit(msg *RabbitMQMessage, exchange Exchange, routingKey,
 	correlationID string) error {
 	return broker.publish(msg, exchange, routingKey, correlationID, "")
 }
 
-func (broker *Impl) Request(msg *RabbitMQMessage, exchange Exchange, routingKey,
+func (broker *messageBroker) Request(msg *RabbitMQMessage, exchange Exchange, routingKey,
 	correlationID, replyTo string) error {
 	return broker.publish(msg, exchange, routingKey, correlationID, replyTo)
 }
 
-func (broker *Impl) Reply(msg *RabbitMQMessage, correlationID, replyTo string) error {
+func (broker *messageBroker) Reply(msg *RabbitMQMessage, correlationID, replyTo string) error {
 	return broker.publish(msg, Exchange(""), replyTo, correlationID, "")
 }
 
-func (broker *Impl) Consume(queueName string, consumer MessageConsumer) {
+func (broker *messageBroker) Consume(queueName string, consumer MessageConsumer) {
 	go func() {
 		eventChanID, eventChan := broker.declareEventChannel()
 		defer broker.deleteEventChannel(eventChanID)
@@ -123,11 +123,11 @@ func (broker *Impl) Consume(queueName string, consumer MessageConsumer) {
 	}()
 }
 
-func (broker *Impl) IsConnected() bool {
+func (broker *messageBroker) IsConnected() bool {
 	return broker.isConnected
 }
 
-func (broker *Impl) Shutdown() {
+func (broker *messageBroker) Shutdown() {
 	broker.connectionMutex.Lock()
 	defer broker.connectionMutex.Unlock()
 
@@ -142,11 +142,11 @@ func (broker *Impl) Shutdown() {
 	broker.callIsConnectedCallback(false)
 }
 
-func (broker *Impl) getIdentifiedQueue(queue string) string {
+func (broker *messageBroker) getIdentifiedQueue(queue string) string {
 	return fmt.Sprintf("%s.%s", broker.clientID, queue)
 }
 
-func (broker *Impl) declareBindings() error {
+func (broker *messageBroker) declareBindings() error {
 	for _, binding := range broker.cfg.bindings {
 		uniqueQueue := broker.getIdentifiedQueue(binding.Queue)
 		routingKey := binding.RoutingKey
@@ -187,11 +187,11 @@ func (broker *Impl) declareBindings() error {
 	return nil
 }
 
-func (broker *Impl) getConsumerTag(queue string) string {
+func (broker *messageBroker) getConsumerTag(queue string) string {
 	return fmt.Sprintf("%s.%s", broker.clientID, queue)
 }
 
-func (broker *Impl) handleAMQPConnection(firstConnectionResult chan<- error) {
+func (broker *messageBroker) handleAMQPConnection(firstConnectionResult chan<- error) {
 	init := true
 	for {
 		log.Info().Msgf("Trying to connect to RabbitMQ Server...")
@@ -248,7 +248,7 @@ func (broker *Impl) handleAMQPConnection(firstConnectionResult chan<- error) {
 	}
 }
 
-func (broker *Impl) connect() error {
+func (broker *messageBroker) connect() error {
 	var err error
 	if broker.connection, err = amqp091.Dial(broker.address); err != nil {
 		log.Error().Err(err).Msgf("Failed to connect to AMQP server")
@@ -279,7 +279,7 @@ func (broker *Impl) connect() error {
 	return nil
 }
 
-func (broker *Impl) emitEvent(event connectionEvent) {
+func (broker *messageBroker) emitEvent(event connectionEvent) {
 	broker.eventsChannelsMutex.Lock()
 	defer broker.eventsChannelsMutex.Unlock()
 
@@ -305,7 +305,7 @@ func (broker *Impl) emitEvent(event connectionEvent) {
 	}
 }
 
-func (broker *Impl) killConnectionsAndChannels() {
+func (broker *messageBroker) killConnectionsAndChannels() {
 	if broker.publisherChannel != nil && !broker.publisherChannel.IsClosed() {
 		err := broker.publisherChannel.Close()
 		if err != nil {
@@ -328,7 +328,7 @@ func (broker *Impl) killConnectionsAndChannels() {
 	}
 }
 
-func (broker *Impl) callIsConnectedCallback(status bool) {
+func (broker *messageBroker) callIsConnectedCallback(status bool) {
 	broker.callbackMutex.Lock()
 	defer broker.callbackMutex.Unlock()
 	defer func() {
@@ -342,7 +342,7 @@ func (broker *Impl) callIsConnectedCallback(status bool) {
 	}
 }
 
-func (broker *Impl) publish(msg *RabbitMQMessage, exchange Exchange,
+func (broker *messageBroker) publish(msg *RabbitMQMessage, exchange Exchange,
 	routingKey, correlationID, replyTo string) error {
 	if !broker.IsConnected() {
 		return ErrMustBeConnected
@@ -382,7 +382,7 @@ func (broker *Impl) publish(msg *RabbitMQMessage, exchange Exchange,
 	return nil
 }
 
-func (broker *Impl) tryingToSetUpConsume(eventChan chan connectionEvent, queue string,
+func (broker *messageBroker) tryingToSetUpConsume(eventChan chan connectionEvent, queue string,
 ) (<-chan amqp091.Delivery, error) {
 	for {
 		select {
@@ -416,7 +416,7 @@ func (broker *Impl) tryingToSetUpConsume(eventChan chan connectionEvent, queue s
 	}
 }
 
-func (broker *Impl) listenToMessages(eventChan chan connectionEvent,
+func (broker *messageBroker) listenToMessages(eventChan chan connectionEvent,
 	consumer MessageConsumer, consumerGoChannel <-chan amqp091.Delivery) interruptionAction {
 	for {
 		select {
@@ -445,7 +445,7 @@ func (broker *Impl) listenToMessages(eventChan chan connectionEvent,
 	}
 }
 
-func (broker *Impl) callConsumer(ctx Context, consumer MessageConsumer, message *RabbitMQMessage) {
+func (broker *messageBroker) callConsumer(ctx Context, consumer MessageConsumer, message *RabbitMQMessage) {
 	defer func() {
 		if err := recover(); err != nil {
 			log.Error().Interface(logPanic, err).Msgf("Message consumer panicked. Continuing...")
@@ -454,7 +454,7 @@ func (broker *Impl) callConsumer(ctx Context, consumer MessageConsumer, message 
 	consumer(ctx, message)
 }
 
-func (broker *Impl) declareEventChannel() (string, chan connectionEvent) {
+func (broker *messageBroker) declareEventChannel() (string, chan connectionEvent) {
 	broker.eventsChannelsMutex.Lock()
 	defer broker.eventsChannelsMutex.Unlock()
 
@@ -470,7 +470,7 @@ func (broker *Impl) declareEventChannel() (string, chan connectionEvent) {
 	return eventChanID, eventChan
 }
 
-func (broker *Impl) deleteEventChannel(eventChanID string) {
+func (broker *messageBroker) deleteEventChannel(eventChanID string) {
 	broker.eventsChannelsMutex.Lock()
 	defer broker.eventsChannelsMutex.Unlock()
 

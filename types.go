@@ -24,8 +24,6 @@ var (
 	ErrActionCanceledByUser  = errors.New("action has been canceled by user by a shutdown")
 )
 
-type Exchange string
-
 type MessageConsumer func(ctx Context, message *RabbitMQMessage)
 
 type MessageBroker interface {
@@ -38,7 +36,15 @@ type MessageBroker interface {
 	Shutdown()
 }
 
-type Impl struct {
+type Exchange string
+
+type Binding struct {
+	Exchange   Exchange
+	RoutingKey string
+	Queue      string
+}
+
+type messageBroker struct {
 	clientID            string
 	address             string
 	cfg                 config
@@ -55,12 +61,6 @@ type Impl struct {
 	eventsChannelsMutex *sync.Mutex
 	connectionMutex     *sync.Mutex
 	callbackMutex       *sync.Mutex
-}
-
-type Binding struct {
-	Exchange   Exchange
-	RoutingKey string
-	Queue      string
 }
 
 type connectionEvent int
