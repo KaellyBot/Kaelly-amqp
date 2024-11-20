@@ -692,12 +692,13 @@ message NewsTwitterMessage
 
 message NewsRSSMessage
 {
-	string                    title      = 1;
-    string                    authorName = 2;
-    string                    url        = 3;
-    string                    iconUrl    = 4;
-    google.protobuf.Timestamp date       = 5;
-    string                    type       = 6;
+	string                    title       = 1;
+    string                    description = 2;
+    string                    authorName  = 3;
+    string                    url         = 4;
+    string                    iconUrl     = 5;
+    google.protobuf.Timestamp date        = 6;
+    string                    type        = 7;
 }
 
 message NewsGameMessage
