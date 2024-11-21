@@ -54,9 +54,10 @@ message RabbitMQMessage
 
     NewsAlmanaxMessage                     newsAlmanaxMessage                    = 600;
     NewsGameMessage                        newsGameMessage                       = 601;
-    NewsRSSMessage                         newsRSSMessage                        = 602;
-    NewsSetMessage                         newsSetMessage                        = 603;
-    NewsTwitterMessage                     newsTwitterMessage                    = 604;
+    NewsGuildMessage                       newsGuildMessage                      = 602;
+    NewsRSSMessage                         newsRSSMessage                        = 603;
+    NewsSetMessage                         newsSetMessage                        = 604;
+    NewsTwitterMessage                     newsTwitterMessage                    = 605;
  
     PortalPositionRequest                  portalPositionRequest                 = 700;
     PortalPositionAnswer                   portalPositionAnswer                  = 701;
@@ -109,9 +110,10 @@ message RabbitMQMessage
 
         NEWS_ALMANAX                              = 800;     
         NEWS_GAME                                 = 801;
-        NEWS_RSS                                  = 802;
-        NEWS_SET                                  = 803;
-        NEWS_TWITTER                              = 804;
+        NEWS_GUILD                                = 802;
+        NEWS_RSS                                  = 803;
+        NEWS_SET                                  = 804;
+        NEWS_TWITTER                              = 805;
 
         PORTAL_POSITION_REQUEST                   = 900;
         PORTAL_POSITION_ANSWER                    = 901;
@@ -707,10 +709,24 @@ message NewsGameMessage
 	string version = 1;
 }
 
+message NewsGuildMessage
+{
+    string id         = 1;
+    string name       = 2;
+    int64 memberCount = 3;
+	Event event       = 4;
+
+    enum Event
+    {
+        UNKNOWN = 0;
+        CREATE  = 1;
+        DELETE  = 2;
+    }
+}
+
 message NewsSetMessage
 {
-	int64 missingSetNumber = 1;
-    int64 builtSetNumber   = 2;
+	repeated string setIds = 1;
 }
 
 message PortalPositionRequest
