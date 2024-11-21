@@ -139,6 +139,7 @@ enum Language
     EN  = 2;
     ES  = 3;
     DE  = 4;
+    PT  = 5;
 }
 
 enum EquipmentType
