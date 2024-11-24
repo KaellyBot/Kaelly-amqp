@@ -26,12 +26,16 @@ message RabbitMQMessage
     
     ConfigurationGetRequest                configurationGetRequest               = 300;
     ConfigurationGetAnswer                 configurationGetAnswer                = 301;
-    ConfigurationSetServerRequest          configurationSetServerRequest         = 302;
-    ConfigurationSetAlmanaxWebhookRequest  configurationSetAlmanaxWebhookRequest = 303;
-    ConfigurationSetRssWebhookRequest      configurationSetRssWebhookRequest     = 304;
-    ConfigurationSetTwitchWebhookRequest   configurationSetTwitchWebhookRequest  = 305;
-    ConfigurationSetTwitterWebhookRequest  configurationSetTwitterWebhookRequest = 306;
-    ConfigurationSetYoutubeWebhookRequest  configurationSetYoutubeWebhookRequest = 307;
+    ConfigurationGuildCreateRequest        configurationGuildCreateRequest       = 302;
+    ConfigurationGuildCreateAnswer         configurationGuildCreateAnswer        = 303;
+    ConfigurationGuildDeleteRequest        configurationGuildDeleteRequest       = 304;
+    ConfigurationGuildDeleteAnswer         configurationGuildDeleteAnswer        = 305;
+    ConfigurationSetServerRequest          configurationSetServerRequest         = 306;
+    ConfigurationSetAlmanaxWebhookRequest  configurationSetAlmanaxWebhookRequest = 307;
+    ConfigurationSetRssWebhookRequest      configurationSetRssWebhookRequest     = 308;
+    ConfigurationSetTwitchWebhookRequest   configurationSetTwitchWebhookRequest  = 309;
+    ConfigurationSetTwitterWebhookRequest  configurationSetTwitterWebhookRequest = 310;
+    ConfigurationSetYoutubeWebhookRequest  configurationSetYoutubeWebhookRequest = 311;
     ConfigurationSetAnswer                 configurationSetAnswer                = 350;
 
     EncyclopediaAlmanaxRequest             encyclopediaAlmanaxRequest            = 400;
@@ -80,12 +84,16 @@ message RabbitMQMessage
 
         CONFIGURATION_GET_REQUEST                 = 400;
         CONFIGURATION_GET_ANSWER                  = 401;
-        CONFIGURATION_SET_SERVER_REQUEST          = 402;
-        CONFIGURATION_SET_ALMANAX_WEBHOOK_REQUEST = 403;
-        CONFIGURATION_SET_RSS_WEBHOOK_REQUEST     = 404;
-        CONFIGURATION_SET_TWITCH_WEBHOOK_REQUEST  = 405;
-        CONFIGURATION_SET_TWITTER_WEBHOOK_REQUEST = 406;
-        CONFIGURATION_SET_YOUTUBE_WEBHOOK_REQUEST = 407;
+        CONFIGURATION_GUILD_CREATE_REQUEST        = 402;
+        CONFIGURATION_GUILD_CREATE_ANSWER         = 403;
+        CONFIGURATION_GUILD_DELETE_REQUEST        = 404;
+        CONFIGURATION_GUILD_DELETE_ANSWER         = 405;
+        CONFIGURATION_SET_SERVER_REQUEST          = 406;
+        CONFIGURATION_SET_ALMANAX_WEBHOOK_REQUEST = 407;
+        CONFIGURATION_SET_RSS_WEBHOOK_REQUEST     = 408;
+        CONFIGURATION_SET_TWITCH_WEBHOOK_REQUEST  = 409;
+        CONFIGURATION_SET_TWITTER_WEBHOOK_REQUEST = 410;
+        CONFIGURATION_SET_YOUTUBE_WEBHOOK_REQUEST = 411;
         CONFIGURATION_SET_ANSWER                  = 450;
 
         ENCYCLOPEDIA_ALMANAX_REQUEST              = 500;
@@ -350,6 +358,30 @@ message ConfigurationGetAnswer
         string videastId = 2;
         string webhookId = 3;
     }
+}
+
+message ConfigurationGuildCreateRequest  
+{
+    string id          = 1;
+    string name        = 2;
+    int64  memberCount = 3;
+}
+
+message ConfigurationGuildCreateAnswer   
+{
+    bool created = 1;
+}
+
+message ConfigurationGuildDeleteRequest  
+{
+    string id          = 1;
+    string name        = 2;
+    int64  memberCount = 3;
+}
+
+message ConfigurationGuildDeleteAnswer   
+{
+    bool deleted = 1;
 }
 
 message ConfigurationSetServerRequest
@@ -711,10 +743,10 @@ message NewsGameMessage
 
 message NewsGuildMessage
 {
-    string id         = 1;
-    string name       = 2;
-    int64 memberCount = 3;
-	Event event       = 4;
+    string id          = 1;
+    string name        = 2;
+    int64  memberCount = 3;
+	Event event        = 4;
 
     enum Event
     {
