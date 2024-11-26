@@ -688,9 +688,12 @@ message NewsAlmanaxMessage
 
 message NewsTwitterMessage
 {
-    string twitterId               = 1;
-    string url                     = 2;
-    google.protobuf.Timestamp date = 3;
+    string                    twitterId   = 1;
+    string                    title       = 2;
+    string                    description = 3;
+    string                    url         = 4;
+    repeated string           iconUrls    = 5;
+    google.protobuf.Timestamp date        = 6;
 }
 
 message NewsRSSMessage
